@@ -1,0 +1,11 @@
+{
+  "name": "asura-social",
+  "version": "1.0.0",
+  "description": "A mini social network for Asura community",
+  "main": "src/server.ts",
+  "scripts": {
+    "test": "asura_test"
+  },
+  "author": "Luan Nguyen",
+  "license": "ISC"
+}
