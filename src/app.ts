@@ -1,5 +1,6 @@
 import express from 'express';
 import { Route } from './core/interfaces';
+import mongoose from 'mongoose';
 
 export class App{//Muon import thi phai export
     public app: express.Application;//express khac Express
@@ -10,6 +11,7 @@ export class App{//Muon import thi phai export
         this.port = process.env.PORT || 5000;//mac dinh la 5000
 
         this.initializeRoutes(routes);
+        this.connectToDatabase();
     }
 
     private initializeRoutes(routes: Route[]){
@@ -17,9 +19,20 @@ export class App{//Muon import thi phai export
             this.app.use('/', route.router);//Chinh la app.use('/', route.router); trong src/modules/index/index.route.ts
     })
     };
+
     public listen(){//de thang khac chay ham listen nay nua
         this.app.listen(this.port, ()=>{
             console.log(`Server is running on port ${this.port}`);
         })
     };
+
+    private connectToDatabase(){
+        try {
+            const connectString = "mongodb+srv://luannguyentm99:Anhptp123456staf@cluster0.1ozqf.mongodb.net/asura_social?retryWrites=true&w=majority&appName=Cluster0"
+            mongoose.connect(connectString);
+            console.log('Connected to database successfully!');
+        } catch (error) {
+            console.log('Error connecting to database:');
+        }
+    }
 }
