@@ -28,7 +28,13 @@ export class App{//Muon import thi phai export
 
     private connectToDatabase(){
         try {
-            const connectString = "mongodb+srv://luannguyentm99:Anhptp123456staf@cluster0.1ozqf.mongodb.net/asura_social?retryWrites=true&w=majority&appName=Cluster0"
+            //Git bao la khong duoc de thong tin dang nhap o day, nen phai de o file env
+            const connectString = process.env.MONGODB_URI;
+            //Do connectString truyen vao .connect nen phai kiem tra undefined
+            if (!connectString) {
+                console.log('MONGODB_URI is not defined in .env file');
+                return;
+            }
             mongoose.connect(connectString);
             console.log('Connected to database successfully!');
         } catch (error) {
