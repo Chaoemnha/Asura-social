@@ -11,13 +11,21 @@
   "license": "ISC",
   "dependencies": {
     "@types/express": "^5.0.1",
-    "dotenv": "^16.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
     "express": "^5.1.0",
+    "helmet": "^8.1.0",
+    "http": "^0.0.1-security",
     "mongoose": "^8.13.2",
-    "typescript": "^5.8.3"
+    "morgan": "^1.10.0",
+    "typescript": "^5.8.3",
+    "winston": "^3.17.0"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/hpp": "^0.2.6",
     "@types/mongoose": "^5.11.97",
+    "@types/morgan": "^1.9.9",
     "cross-env": "^7.0.3",
     "nodemon": "^3.1.9",
     "ts-node": "^10.9.2",

@@ -1,15 +1,23 @@
+import dotenv from 'dotenv';
+dotenv.config();//De dung duoc dotenv thi phai import o dau cua doan ma
 import express from 'express';
 import { Route } from './core/interfaces';
 import mongoose from 'mongoose';
+import helmet from 'helmet';
+import hpp from 'hpp';
+import cors from 'cors';
+import e from 'express';
+import logger from './core/utils/logger';
 
 export class App{//Muon import thi phai export
     public app: express.Application;//express khac Express
     public port: number | string;
+    public production: boolean;
 
     constructor(routes: Route[]){//Chinh la route duoc dinh nghia tu src/core/interfaces/routes.interfaces.ts
         this.app = express();
         this.port = process.env.PORT || 5000;//mac dinh la 5000
-
+        this.production = process.env.NODE_ENV == 'production'?true:false
         this.initializeRoutes(routes);
         this.connectToDatabase();
     }
@@ -22,7 +30,7 @@ export class App{//Muon import thi phai export
 
     public listen(){//de thang khac chay ham listen nay nua
         this.app.listen(this.port, ()=>{
-            console.log(`Server is running on port ${this.port}`);
+            logger.info(`Server is running on port ${this.port}`);
         })
     };
 
@@ -32,13 +40,36 @@ export class App{//Muon import thi phai export
             const connectString = process.env.MONGODB_URI;
             //Do connectString truyen vao .connect nen phai kiem tra undefined
             if (!connectString) {
-                console.log('MONGODB_URI is not defined in .env file');
+                logger.error('MONGODB_URI is not defined in .env file');
                 return;
             }
             mongoose.connect(connectString);
-            console.log('Connected to database successfully!');
+            logger.info('Connected to database successfully!');
         } catch (error) {
-            console.log('Error connecting to database:');
+            logger.error('Error connecting to database:');
+        }
+    }
+
+    private initializeMiddlewares(){
+        if(this.production){
+            this.app.use(localHpp());
+            this.app.use(helmet());
+            this.app.use(morgan("combined"));
+            this.app.use(
+                cors({origin: "yourdomain.com", credentials: true})
+            );
+        }
+        else{
+            this.app.use(morgan("dev"));
+            this.app.use(cors({origin: true, credentials: true}));
         }
     }
 }
+
+function localHpp(): any {
+    throw new Error('Function not implemented.');
+}
+function morgan(arg0: string): any {
+    throw new Error('Function not implemented.');
+}
+
