@@ -2,6 +2,9 @@
 import 'dotenv/config';
 import { App } from './app';
 import { IndexRoute } from './modules/index';
+import {validateEnv} from './core/utils/index';
+
+validateEnv();
 //Chung ta se lien ket cac module lai trong file chinh nay
 const routes = [new IndexRoute()];
 const app = new App(routes);
