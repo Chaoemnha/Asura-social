@@ -1,13 +1,13 @@
 import dotenv from 'dotenv';
 dotenv.config();//De dung duoc dotenv thi phai import o dau cua doan ma
 import express from 'express';
-import { Route } from './core/interfaces';
+import { Route } from '@core/interfaces';
 import mongoose from 'mongoose';
 import helmet from 'helmet';
 import hpp from 'hpp';
 import cors from 'cors';
 import e from 'express';
-import logger from './core/utils/logger';
+import logger from '@core/utils/logger';
 
 export class App{//Muon import thi phai export
     public app: express.Application;//express khac Express
