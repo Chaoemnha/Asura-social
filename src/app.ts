@@ -7,7 +7,8 @@ import helmet from 'helmet';
 import hpp from 'hpp';
 import cors from 'cors';
 import e from 'express';
-import logger from '@core/utils/logger';
+import {logger} from '@core/utils';
+import {errorMiddleware} from '@core/middleware';
 
 export class App{//Muon import thi phai export
     public app: express.Application;//express khac Express
@@ -63,6 +64,7 @@ export class App{//Muon import thi phai export
             this.app.use(morgan("dev"));
             this.app.use(cors({origin: true, credentials: true}));
         }
+        this.app.use(errorMiddleware);
     }
 }
 
