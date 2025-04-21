@@ -16,7 +16,7 @@ class UserService{
 
         const user = await this.userSchema.findOne({email: model.email});
         if(user){
-            throw new HttpException(409, `Your email ${model.email} already exist. `)
+            throw new HttpException(409, `Your emai ${model.email} already exist. `)
         }
         //Ket noi gravatar
         const avatar = gravatar.url(model.email!, {

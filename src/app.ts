@@ -6,7 +6,6 @@ import mongoose from 'mongoose';
 import helmet from 'helmet';
 import hpp from 'hpp';
 import cors from 'cors';
-import e from 'express';
 import {logger} from '@core/utils';
 import {errorMiddleware} from '@core/middleware';
 import morgan from 'morgan';
@@ -25,10 +24,10 @@ export class App{//Muon import thi phai export
         this.initializeRoutes(routes);
         this.initializeErrorMiddleware();
     }
+
     private initializeErrorMiddleware(){
         this.app.use(errorMiddleware);
     }
-
     private initializeRoutes(routes: Route[]){
         routes.forEach((route)=> {
             this.app.use('/', route.router);//Chinh la app.use('/', route.router); trong src/modules/index/index.route.ts
