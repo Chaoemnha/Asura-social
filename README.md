@@ -25,3 +25,4 @@
 
 - tsc --init
   https://www.npmjs.com/package/winston
+  https://www.npmjs.com/package/class-validator

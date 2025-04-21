@@ -24,9 +24,9 @@ class UserService{
             rating: 'g',
             default: 'mm'
         });
-        //Bam source ra thanh sorce 10 ki tu => add bcryptjs
+        //Bam source ra thanh source 10 ki tu => add bcryptjs
         const salt = await bcryptjs.genSalt(10);
-        const hashedPassword = bcryptjs.hash(model.password!, salt);
+        const hashedPassword = await bcryptjs.hash(model.password!, salt);//Day la 1 promise nen phai dung await
         const createdUser: IUser = await this.userSchema.create({
             ...model,
             password: hashedPassword,
@@ -46,4 +46,5 @@ class UserService{
             }
         }
 }
+
 export default UserService;

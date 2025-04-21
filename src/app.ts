@@ -9,6 +9,7 @@ import cors from 'cors';
 import e from 'express';
 import {logger} from '@core/utils';
 import {errorMiddleware} from '@core/middleware';
+import morgan from 'morgan';
 
 export class App{//Muon import thi phai export
     public app: express.Application;//express khac Express
@@ -19,8 +20,13 @@ export class App{//Muon import thi phai export
         this.app = express();
         this.port = process.env.PORT || 5000;//mac dinh la 5000
         this.production = process.env.NODE_ENV == 'production'?true:false
-        this.initializeRoutes(routes);
         this.connectToDatabase();
+        this.initializeMiddlewares();
+        this.initializeRoutes(routes);
+        this.initializeErrorMiddleware();
+    }
+    private initializeErrorMiddleware(){
+        this.app.use(errorMiddleware);
     }
 
     private initializeRoutes(routes: Route[]){
@@ -53,25 +59,19 @@ export class App{//Muon import thi phai export
 
     private initializeMiddlewares(){
         if(this.production){
-            this.app.use(localHpp());
+            this.app.use(hpp());
             this.app.use(helmet());
             this.app.use(morgan("combined"));
             this.app.use(
-                cors({origin: "yourdomain.com", credentials: true})
+                cors({origin: "your.domain.com", credentials: true})
             );
         }
         else{
             this.app.use(morgan("dev"));
             this.app.use(cors({origin: true, credentials: true}));
         }
-        this.app.use(errorMiddleware);
+        this.app.use(express.json());//Cai them may cai nay de nhan req body
+        this.app.use(express.urlencoded({extended: true}));
     }
-}
-
-function localHpp(): any {
-    throw new Error('Function not implemented.');
-}
-function morgan(arg0: string): any {
-    throw new Error('Function not implemented.');
 }
 
