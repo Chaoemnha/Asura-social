@@ -7,6 +7,7 @@ import gravatar from "gravatar";
 import bcryptjs from "bcryptjs";
 import IUser from "./user.interface";
 import jwt from "jsonwebtoken";
+import { IPagination } from "@core/interfaces";
 class UserService {
   public userSchema = UserSchema;
   public async createUser(model: RegisterDto): Promise<TokenData> {
@@ -98,6 +99,47 @@ class UserService {
     const expriesIn: number = 3600;
     return {
       token: jwt.sign(dataInToken, secret, { expiresIn: expriesIn }), //Den day phai bam, => add jsonwebtoken de no bam ra jwt token
+    };
+  }
+
+  public async getAll(): Promise<IUser[]> {
+    const users = await this.userSchema.find().exec();
+    return users;
+  }
+
+  public async getAllPaging(
+    keyword: string,
+    page: number
+  ): Promise<IPagination<IUser>> {
+    const pageSize: number = Number(process.env.PAGE_SIZE) || 10;
+
+    // Tạo query cho việc tìm kiếm
+    const searchQuery = keyword
+      ? {
+          $or: [
+            { email: keyword },
+            { first_name: keyword },
+            { last_name: keyword },
+          ],
+        }
+      : {};
+
+    // Thực thi query để lấy danh sách người dùng
+    const users = await this.userSchema
+      .find(searchQuery)
+      .sort({ date: -1 })
+      .skip((page - 1) * pageSize)
+      .limit(pageSize)
+      .exec();
+
+    // Thực thi query để đếm tổng số tài liệu
+    const rowCount = await this.userSchema.countDocuments(searchQuery).exec();
+
+    return {
+      total: rowCount,
+      page,
+      pageSize,
+      items: users,
     };
   }
 }
