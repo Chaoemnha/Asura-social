@@ -51,13 +51,20 @@ class UserService {
     //ktra email truyen vao bi giong email user cu
     if (user.email == model.email) {
       throw new HttpException(400, `You must using the different email`);
-    } else {
-      avatar = gravatar.url(model.email!, {
-        size: "200",
-        rating: "g",
-        default: "mm",
-      });
     }
+    const checkEmailExist = await this.userSchema
+      .find({
+        $and: [{ email: { $eq: model.email } }, { _id: { $ne: userId } }],
+      })
+      .exec();
+    if (checkEmailExist.length != 0) {
+      throw new HttpException(400, "Your email has been used by another user");
+    }
+    avatar = gravatar.url(model.email!, {
+      size: "200",
+      rating: "g",
+      default: "mm",
+    });
     let updateUserById;
     if (model.password) {
       const salt = await bcryptjs.genSalt(10);
@@ -72,10 +79,14 @@ class UserService {
     } else {
       //Neu co pass thi cap nhat pass ko thi thoi
       updateUserById = await this.userSchema
-        .findByIdAndUpdate(userId, {
-          ...model,
-          avatar: avatar,
-        })
+        .findByIdAndUpdate(
+          userId,
+          {
+            ...model,
+            avatar: avatar,
+          },
+          { new: true }
+        )
         .exec();
     }
     if (!updateUserById) {
