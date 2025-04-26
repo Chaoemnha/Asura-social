@@ -142,6 +142,11 @@ class UserService {
       items: users,
     };
   }
+  public async deleteUser(userId: string): Promise<IUser> {
+    const deleteUser = await this.userSchema.findByIdAndDelete(userId).exec();
+    if (!deleteUser) throw new HttpException(409, "Your id is invalid");
+    return deleteUser;
+  }
 }
 
 export default UserService;
