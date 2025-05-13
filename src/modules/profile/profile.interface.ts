@@ -3,6 +3,7 @@ export interface IProfile {
   user: string;
   company: string;
   location: string;
+  website: string;
   status: string;
   skills: string[];
   bio: string;
@@ -33,7 +34,8 @@ export interface IEducation {
   current: boolean;
   description: string;
 }
-export interface ISocial {
+export interface ISocial extends Record<string, string> {
+  //Khai bao giong dictionary
   youtube: string;
   twitter: string;
   facebook: string;
