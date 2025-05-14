@@ -1,10 +1,11 @@
 import { IUser, UserSchema } from "@modules/auth";
-import { IProfile, ISocial } from "./profile.interface";
+import { IExperience, IProfile, ISocial } from "./profile.interface";
 import ProfileSchema from "./profile.model";
 import { HttpException } from "@core/exceptions";
-import CreateProfileDto from "./create_profile.dto";
+import CreateProfileDto from "./dtos/create_profile.dto";
 import { NextFunction } from "express";
 import { isWebUri } from "valid-url";
+import AddExperienceDto from "./dtos/add_experience.dto";
 class ProfileService {
   public async getCurrentProfile(userId: string): Promise<Partial<IUser>> {
     const user = await ProfileSchema.findOne({ user: userId })
@@ -80,5 +81,50 @@ class ProfileService {
       .exec();
     return profiles;
   }
+  //B32.1
+  public addExperience = async (
+    userId: string,
+    experience: AddExperienceDto
+  ) => {
+    // const { title, company, location, from, to, current, description } =
+    //   experience;
+    // const newExp = {
+    //   title,
+    //   company,
+    //   location,
+    //   from,
+    //   to,
+    //   current,
+    //   description,
+    // };
+    //Tuong doi voi
+    const newExp = {
+      ...experience,
+    };
+
+    const profile = await ProfileSchema.findOne({ user: userId }).exec();
+    if (!profile) {
+      throw new HttpException(400, "There is not profile for this user");
+    }
+    //Add moi 1 ban ghi vao dau mang
+    profile.experience.unshift(newExp as IExperience);
+    await profile.save();
+
+    return profile;
+  };
+
+  public deleteExperience = async (userId: string, experienceId: string) => {
+    const profile = await ProfileSchema.findOne({ user: userId }).exec();
+
+    if (!profile) {
+      throw new HttpException(400, "There is not profile for this user");
+    }
+
+    profile.experience = profile.experience.filter(
+      (exp) => exp._id.toString() !== experienceId
+    );
+    await profile.save();
+    return profile;
+  }; //B31.10 sang controll add ctrl
 }
 export default ProfileService; //B31.23 Vao phan routing

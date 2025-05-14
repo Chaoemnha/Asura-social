@@ -1,7 +1,8 @@
 import { IUser } from "@modules/auth";
 import ProfileService from "./profile.service";
 import { Request, Response, NextFunction } from "express";
-import CreateProfileDto from "./create_profile.dto";
+import CreateProfileDto from "./dtos/create_profile.dto";
+import AddExperienceDto from "./dtos/add_experience.dto";
 
 class ProfileController {
   private profileService = new ProfileService();
@@ -79,5 +80,37 @@ class ProfileController {
       next(error);
     }
   };
+
+  public createExperience = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    const data: AddExperienceDto = req.body;
+    const userId = res.locals.user.id;
+    try {
+      const resultObj = await this.profileService.addExperience(userId, data);
+      res.status(200).json(resultObj);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public deleteExperience = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const expId = req.params.exp_id;
+      const resultObj = await this.profileService.deleteExperience(
+        res.locals.user.id,
+        expId
+      );
+      res.status(200).json(resultObj);
+    } catch (error) {
+      next(error);
+    }
+  }; //Xong sang route add duong dan create & delete
 }
 export default ProfileController;
