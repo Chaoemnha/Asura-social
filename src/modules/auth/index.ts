@@ -1,5 +1,13 @@
 import { DataStoredInToken, TokenData } from "./auth.interface";
-import UsersRoute from "@modules/users/user.route";
-import UserSchema from '@modules/users/user.model';
-import IUser from "@modules/users/user.interface";
-export {DataStoredInToken, TokenData, UserSchema, UsersRoute, IUser}
+import AuthRoute from "./auth.route";
+import AuthService from "./auth.service";
+import AuthController from "./auth.controller";
+import LoginDto from "./auth.dto";
+export {
+  DataStoredInToken,
+  TokenData,
+  AuthController,
+  AuthRoute,
+  AuthService,
+  LoginDto,
+};

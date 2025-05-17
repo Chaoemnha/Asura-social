@@ -1,4 +1,5 @@
-import { DataStoredInToken, TokenData, UserSchema, IUser } from "@modules/auth";
+import { DataStoredInToken, TokenData } from "@modules/auth";
+import { UserSchema, IUser } from "@modules/users";
 import { isEmptyObject } from "@core/utils";
 import { HttpException } from "@core/exceptions";
 import bcryptjs from "bcryptjs";
