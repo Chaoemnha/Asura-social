@@ -10,6 +10,8 @@
 
 # production
 /build
+/js
+/vendor
 
 # misc
 .DS_Store

@@ -1,20 +1,20 @@
-import React, { JSX } from 'react'
+import React, { JSX, useEffect, useState } from 'react'
 import { Login } from '../pages/Account/Login';
-import { PathRouteProps } from 'react-router-dom';
-
-interface PrivateRouteProps extends PathRouteProps {
+import { Navigate, PathRouteProps } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { AppState } from '../store';
+interface PrivateRouteProps {
   children: React.ReactNode;
-  isAuthenticated: boolean;
 }
 
 export const PrivateRoute = ({
   children,
-  isAuthenticated,
-}: PrivateRouteProps): JSX.Element => {
+  }: PrivateRouteProps): JSX.Element => {
+    const isAuthenticated = !!localStorage.getItem('token');
   return isAuthenticated ? (
     <>{children}</>
   ) : (
-    <Login/>
+    <Navigate to="/api/auth" replace />
   );
 };
 

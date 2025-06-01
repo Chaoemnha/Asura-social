@@ -1,6 +1,8 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 
 export const Admin = () => {
+  const [userName, setUserName] = useState('');
+  const [avt, setAvt] = useState();
   return (
     <Fragment>
   {/* Sidebar */}
@@ -10,7 +12,7 @@ export const Admin = () => {
       <div className="sidebar-brand-icon rotate-n-15">
         <i className="fas fa-laugh-wink" />
       </div>
-      <div className="sidebar-brand-text mx-3">SB Admin <sup>2</sup></div>
+      <div className="sidebar-brand-text mx-3">Asura social</div>
     </a>
     {/* Divider */}
     <hr className="sidebar-divider my-0" />
@@ -255,8 +257,8 @@ export const Admin = () => {
           {/* Nav Item - User Information */}
           <li className="nav-item dropdown no-arrow">
             <a className="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              <span className="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
-              <img className="img-profile rounded-circle" src="img/undraw_profile.svg" />
+              <span className="mr-2 d-none d-lg-inline text-gray-600 small font-weight-bold">{userName}</span>
+              <img className="img-profile rounded-circle" src={avt} />
             </a>
             {/* Dropdown - User Information */}
             <div className="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
@@ -577,7 +579,7 @@ export const Admin = () => {
     <footer className="sticky-footer bg-white">
       <div className="container my-auto">
         <div className="copyright text-center my-auto">
-          <span>Copyright © Your Website 2021</span>
+          <span>Copyright © Asura social 2025</span>
         </div>
       </div>
     </footer>
