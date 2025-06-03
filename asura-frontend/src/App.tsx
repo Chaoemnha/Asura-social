@@ -13,7 +13,7 @@ function App() {
       <Router>
         <Routes>
           <Route
-            path="/"
+            path="/admin/home"
             element={
               <PrivateRoute>
                 <Admin />
@@ -21,7 +21,7 @@ function App() {
             }
           />
           <Route
-            path="/api/auth"
+            path="/login"
             element={
               <AccountRoute>
                 <Login />

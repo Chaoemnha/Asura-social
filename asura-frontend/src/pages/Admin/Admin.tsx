@@ -1,8 +1,20 @@
 import React, { Fragment, useEffect, useState } from 'react'
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router';
+import { AccountState } from '../../store/account/types';
+import { AppState } from '../../store';
 
 export const Admin = () => {
   const [userName, setUserName] = useState('');
   const [avt, setAvt] = useState();
+  //P select đúng state bị tác động bởi LOGOUT
+  const token = useSelector((state: AppState)=>state.account.token)
+  const navigate = useNavigate();
+  useEffect(()=>{
+    if(!token){
+      navigate('/login', { replace: true })
+    }
+  },[token, navigate])
   return (
     <Fragment>
   {/* Sidebar */}

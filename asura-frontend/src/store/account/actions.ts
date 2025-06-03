@@ -7,7 +7,6 @@ import {
   LOGIN_SUCCESS,
 } from "./types";
 import { userService } from "../../services/user.service";
-import { AccountState } from "./types";
 import { history } from "../../helpers/history";
 
 export const login = (email: string, password: string, from: string) => {
@@ -34,6 +33,7 @@ export const login = (email: string, password: string, from: string) => {
           error: "",
           token: "",
         });
+        console.log(from);
       },
       (error) => {
         dispatch({

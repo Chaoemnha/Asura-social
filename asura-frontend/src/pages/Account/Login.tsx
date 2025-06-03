@@ -57,10 +57,9 @@ export const Login = () => {
     const handleSubmit = ((e: FormEvent<HTMLFormElement>) =>{
       e.preventDefault();
       setSubmitted(true);
-        console.log('Đang gửi dữ liệu:', { email, password });
       if(email&&password){
         console.log('Đang gửi dữ liệu:', { email, password });
-        const {from} = location.state || {from: {pathname: '/'}};
+        const {from} = location.state || {from: '/'};
         dispatch(login(email, password, from) as any);
       }
     });
