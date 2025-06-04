@@ -1,4 +1,6 @@
 import React, { useState } from 'react'
+import { useDispatch } from 'react-redux';
+import { logout } from '../../store/account/actions';
 
 export const Topbar = () => {
   const [userName, setUserName] = useState('');
@@ -6,6 +8,7 @@ export const Topbar = () => {
   const [isOptShow, setIsOptShow] = useState(false);
   const [isAlertShow, setIsAlertShow] = useState(false);
   const [isMesShow, setIsMesShow] = useState(false);
+  const dispatch = useDispatch();
 
   return (
       <nav className="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
@@ -174,7 +177,7 @@ export const Topbar = () => {
                 Activity Log
               </a>
               <div className="dropdown-divider" />
-              <a className="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+              <a className="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal" onClick={()=>dispatch(logout() as any)}>
                 <i className="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400" />
                 Logout
               </a>
