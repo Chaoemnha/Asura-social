@@ -2,6 +2,7 @@ import { NextFunction, Request, Response, response } from "express";
 
 import { DataStoredInToken } from "../../modules/auth/auth.interface";
 import jwt from "jsonwebtoken";
+import Logger from "@core/utils/logger";
 
 const authMiddleware = (
   req: Request,
@@ -27,6 +28,7 @@ const authMiddleware = (
     res.locals.user.id = user.id;
     next();
   } catch (error) {
+    Logger.error(`[ERROR] Msg: ${error}`);
     res.status(401).json({ message: "Token is not valid" });
   }
 };

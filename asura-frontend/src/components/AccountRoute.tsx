@@ -11,10 +11,11 @@ interface PrivateRouteProps extends PathRouteProps {
 export const AccountRoute = ({
   children,
   }: PrivateRouteProps): JSX.Element => {
-  const account = useSelector((state: AppState)=> state.account);
-  return account.token ? (
+  const data = useSelector((state: AppState)=> state) as any;
+  console.log(data.account.token);
+  return data.account.token ? (
     <Navigate to="/admin/home" replace />
   ) : (
-    <Login/>
+    <>{children}</>
   );
 };

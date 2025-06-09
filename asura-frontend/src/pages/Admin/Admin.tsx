@@ -1,20 +1,29 @@
 import React, { Fragment, useEffect, useState } from 'react'
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
-import { AccountState } from '../../store/account/types';
+import { AccountState, AuthenticatedUser } from '../../store/account/types';
 import { AppState } from '../../store';
 import { Sidebar } from '../Sidebar/Sidebar';
 import { Topbar } from '../Topbar/Topbar';
+import {getCurrentLoginUser} from '../../store/account/actions';
 
 export const Admin = () => {
   //P select đúng state bị tác động bởi LOGOUT
-  const token = useSelector((state: AppState)=>state.account.token)
+  const token = useSelector<AppState>(
+      (state: any) => state.account.token
+    );
   const navigate = useNavigate();
-  useEffect(()=>{
-    if(!token){
-      navigate('/login', { replace: true })
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getCurrentLoginUser() as any);
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (token === null) {
+      navigate('/login', { replace: true });
+      console.log("Dang chuyen ve login");
     }
-  },[token, navigate])
+  }, [token, navigate]);
   return (
     <Fragment>
       <Sidebar/>

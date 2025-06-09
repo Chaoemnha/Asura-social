@@ -1,15 +1,21 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux';
 import { logout } from '../../store/account/actions';
+import { useSelector } from 'react-redux';
+import { AppState } from '../../store';
+import { AuthenticatedUser } from '../../store/account/types';
 
 export const Topbar = () => {
-  const [userName, setUserName] = useState('');
-  const [avt, setAvt] = useState('');
   const [isOptShow, setIsOptShow] = useState(false);
   const [isAlertShow, setIsAlertShow] = useState(false);
   const [isMesShow, setIsMesShow] = useState(false);
   const dispatch = useDispatch();
-
+  //ham chon 1 phan cua state hien tai theo kieu <AppState> la {user:{...}, loading:...,...}, nhung thuc ra state dang la {account:{...}, _persist:{}}
+  const userSelect = useSelector<AppState>(
+    (state) => state
+  ) as any;
+  const user = userSelect.account.user;
+  console.log(user);
   return (
       <nav className="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
         {/* Sidebar Toggle (Topbar) */}
@@ -159,8 +165,8 @@ export const Topbar = () => {
           {/* Nav Item - User Information */}
           <li className={"nav-item dropdown no-arrow"+(isOptShow?" show":"")}>
             <a className="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded={(isOptShow?"true":"false")}  onClick={()=>setIsOptShow(!isOptShow)}>
-              <span className="mr-2 d-none d-lg-inline text-gray-600 small font-weight-bold">{userName}</span>
-              <img className="img-profile rounded-circle" src={avt} />
+              <span className="mr-2 d-lg-inline text-gray-600 small font-weight-bold">{user?(user.first_name+" "+user.last_name):"a"}</span>
+              <img className="img-profile rounded-circle" src={user?(user.avatar):undefined} />
             </a>
             {/* Dropdown - User Information */}
             <div className={"dropdown-menu dropdown-menu-right shadow animated--grow-in"+(isOptShow?" show":"")} aria-labelledby="userDropdown">

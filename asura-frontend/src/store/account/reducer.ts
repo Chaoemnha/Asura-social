@@ -1,6 +1,9 @@
 import {
   AccountActionTypes,
   AccountState,
+  LOAD_CURRENT_LOGIN_USER_FAILURE,
+  LOAD_CURRENT_LOGIN_USER_REQUEST,
+  LOAD_CURRENT_LOGIN_USER_SUCCESS,
   LOG_OUT,
   LOGIN_FAILURE,
   LOGIN_REQUEST,
@@ -22,10 +25,18 @@ export const accountReducer = (
       return { ...state, loading: true };
     }
     case LOGIN_FAILURE: {
-      return { ...state, loading: false, error: action.payload.error };
+      return {
+        ...state,
+        loading: false,
+        error: action.payload.error,
+      };
     }
     case LOGIN_SUCCESS: {
-      return { ...state, loading: false, token: action.payload.token };
+      return {
+        ...state,
+        loading: false,
+        token: action.payload.token,
+      };
     }
     case LOG_OUT: {
       return {
@@ -33,6 +44,30 @@ export const accountReducer = (
         user: null,
         token: null,
         error: null,
+      };
+    }
+    case LOAD_CURRENT_LOGIN_USER_REQUEST: {
+      return { ...state, user: null, loading: true };
+    }
+    case LOAD_CURRENT_LOGIN_USER_SUCCESS: {
+      return {
+        user: action.payload.user ?? {
+          _id: "",
+          first_name: "",
+          last_name: "",
+          email: "",
+          avatar: "",
+        },
+        loading: false,
+        error: null,
+        token: state.token,
+      };
+    }
+    case LOAD_CURRENT_LOGIN_USER_FAILURE: {
+      return {
+        ...state,
+        loading: false,
+        error: action.payload.error,
       };
     }
     default: {

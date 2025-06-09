@@ -10,11 +10,12 @@ interface PrivateRouteProps {
 export const PrivateRoute = ({
   children,
   }: PrivateRouteProps): JSX.Element => {
-    const isAuthenticated = !!localStorage.getItem('token');
-  return isAuthenticated ? (
+    const isAuthenticated = useSelector((state: AppState)=> state) as any;
+    
+  return isAuthenticated.account.token ? (
     <>{children}</>
   ) : (
-    <Navigate to="/api/auth" replace />
+    <Navigate to="/login" replace />
   );
 };
 

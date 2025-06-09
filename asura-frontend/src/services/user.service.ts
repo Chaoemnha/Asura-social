@@ -1,34 +1,21 @@
+import { api } from "../helpers";
+
 //login la Promise void vi ham fetch ko return gia tri trong ham then cuoi
-const login = (email: string, password: string) => {
-  const requestOptions = {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password }),
-  };
-
-  return fetch(`${process.env.REACT_APP_API_URL}/auth`, requestOptions)
-    .then(handleResponse)
-    .then((response) => {
-      sessionStorage.setItem("user", JSON.stringify(response));
-      return response;
-    });
+const login = async (email: string, password: string) => {
+  const body = { email, password };
+  return await api.post<any>("/auth", body).then((response) => {
+    sessionStorage.setItem("token", response.data.token);
+    return response.data;
+  });
 };
-//Ham handleRespone de xu ly loi va thanh cong
-const handleResponse = (response: any) => {
-  return response.text().then((text: string) => {
-    const data = text && JSON.parse(text);
-    if (!response.ok) {
-      if (response.status === 401) {
-        logout();
-      }
-
-      const error = (data && data.message) || response.statusText;
-      return Promise.reject(error);
-    }
-    return data;
+const getCurrentLoginUser = async (): Promise<any> => {
+  return await api.get<any>("/auth").then((response) => {
+    console.log(response);
+    return response.data;
   });
 };
 
+//Bo handleResponse di vi xai middleware
 const logout = () => {
   sessionStorage.removeItem("user");
 };
@@ -36,4 +23,5 @@ const logout = () => {
 export const userService = {
   login,
   logout,
+  getCurrentLoginUser,
 };

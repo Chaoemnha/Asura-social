@@ -35,7 +35,7 @@ export const Login = () => {
     });
     const [submitted, setSubmitted] = useState(false);
 
-    const loading = useSelector<AppState, ReactNode>((state)=>state.account.loading);
+    const loading = useSelector<AppState, ReactNode>((state)=>state.loading);
 
     const {email, password} = inputs;
 
