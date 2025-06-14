@@ -21,7 +21,7 @@ class UserService {
     }
     //Ket noi gravatar
     const avatar = gravatar.url(model.email!, {
-      size: "200",
+      size: "50",
       rating: "g",
       default: "mm",
     });
@@ -61,7 +61,7 @@ class UserService {
       throw new HttpException(400, "Your email has been used by another user");
     }
     avatar = gravatar.url(model.email!, {
-      size: "200",
+      size: "50",
       rating: "g",
       default: "mm",
     });

@@ -1,5 +1,4 @@
 import React, { JSX } from 'react'
-import { Login } from '../pages/Account/Login';
 import { Navigate, PathRouteProps } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { AppState } from '../store';
@@ -13,8 +12,8 @@ export const AccountRoute = ({
   }: PrivateRouteProps): JSX.Element => {
   const data = useSelector((state: AppState)=> state) as any;
   console.log(data.account.token);
-  return data.account.token ? (
-    <Navigate to="/admin/home" replace />
+  return (!(data.account.error)&&!!(data.account.token)) ? (
+    <Navigate to="/" replace />
   ) : (
     <>{children}</>
   );

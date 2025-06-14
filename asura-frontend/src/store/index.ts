@@ -4,8 +4,12 @@ import { configureStore } from "@reduxjs/toolkit";
 import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import { setAuthToken } from "../helpers/setAuthToken";
+import { userReducer } from "./users/reducers";
 
-const rootReducer = combineReducers({ account: accountReducer });
+const rootReducer = combineReducers({
+  account: accountReducer,
+  users: userReducer,
+});
 
 const persistConfig = {
   key: "root",
@@ -22,7 +26,7 @@ declare global {
 
 //const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
-export type AppState = ReturnType<typeof accountReducer>;
+export type AppState = ReturnType<typeof rootReducer>;
 export type AppStore = ReturnType<typeof configurStore>;
 //Tu tim hieu va cai dat thunkmiddleware
 const configurStore = () => {

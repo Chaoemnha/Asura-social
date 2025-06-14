@@ -1,12 +1,9 @@
 import React, { ChangeEvent, FormEvent, ReactNode, useEffect, useState } from 'react'
-import { PrivateRoute } from '../../components/PrivateRoute';
-import { Admin } from '../Admin/Admin';
-import { useLocation, useNavigate } from 'react-router';
+import { useLocation } from 'react-router';
 import { useSelector } from 'react-redux';
 import { AppState } from '../../store';
 import { useDispatch } from 'react-redux';
 import { login, logout } from '../../store/account/actions';
-import { AccountActionTypes } from '../../store/account/types';
 
 export const Login = () => {
 //   const [email, setEmail] = useState('');
@@ -35,7 +32,7 @@ export const Login = () => {
     });
     const [submitted, setSubmitted] = useState(false);
 
-    const loading = useSelector<AppState, ReactNode>((state)=>state.loading);
+    const loading = useSelector<AppState, ReactNode>((state)=>state.account.loading);
 
     const {email, password} = inputs;
 
@@ -44,7 +41,7 @@ export const Login = () => {
 
     useEffect(()=>{
       dispatch(logout() as any);
-    }, []);
+    }, [dispatch]);
 
     const handleChange = ((e: ChangeEvent<HTMLInputElement>) =>{
       const {name, value} = e.target;
