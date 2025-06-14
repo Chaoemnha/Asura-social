@@ -1,17 +1,29 @@
-import React, { Fragment, JSX, useEffect } from 'react'
+import React, { Fragment, JSX, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { AppState } from '../../store'
 import {IUser} from '../../store/users/types'
 import { useDispatch } from 'react-redux'
 import { loadUsersPaging } from '../../store/users/actions'
+import { Pagination } from '../../components'
 
 export const Users = () => {
   const users: IUser [] = useSelector((state: AppState)=>state.users.items);
+  const totalItems = useSelector((state: AppState)=>state.users.total);
+  //Gio ms biet pageSize no lay tu respone tu backend
+  const pageSize = useSelector((state: AppState)=>state.users.pageSize);
+
+  const [currentPage, setCurrentPage] = useState(1);
   console.log(users);
   const dispatch = useDispatch();
   useEffect(()=>{
-    dispatch(loadUsersPaging(1) as any);
-  },[dispatch])
+    //Nhu nay khi F5 van o trang do
+    dispatch(loadUsersPaging(currentPage) as any);
+  },[dispatch, currentPage])
+
+  const onPageChanged = (pageNumber: number)=>{
+    setCurrentPage(pageNumber);
+    dispatch(loadUsersPaging(pageNumber) as any);
+  }
   //Lay tablebody ra thanh 1 bien la mang JSX khi lay cac thuoc tinh user hien thi ra JSX
   const userElements: JSX.Element[]=users.map((user)=>{
     return(
@@ -49,6 +61,9 @@ export const Users = () => {
           </tbody>
         </table>
       </div>
+    </div>
+    <div className='card-footer'>
+      <Pagination totalRecords={totalItems} pageLimit={3} pageSize={pageSize} onPageChanged={onPageChanged}></Pagination>
     </div>
   </div>
 </div>

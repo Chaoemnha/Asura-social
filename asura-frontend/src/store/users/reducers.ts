@@ -9,6 +9,7 @@ const initialState: UsersState = {
   items: [],
   page: 1,
   total: 0,
+  pageSize: 0,
   loading: false,
   deletedCount: 0,
   error: null,
@@ -33,6 +34,7 @@ export const userReducer = (
         items: action.payload.items,
         total: action.payload.total,
         page: action.payload.page,
+        pageSize: action.payload.pageSize,
       };
     }
     case LOAD_USER_PAGING_FAILURE: {

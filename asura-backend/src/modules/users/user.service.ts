@@ -122,7 +122,7 @@ class UserService {
     keyword: string,
     page: number
   ): Promise<IPagination<IUser>> {
-    const pageSize: number = Number(process.env.PAGE_SIZE) || 10;
+    const pageSize: number = Number(process.env.PAGE_SIZE) || 9;
 
     // Tạo query cho việc tìm kiếm
     const searchQuery = keyword
