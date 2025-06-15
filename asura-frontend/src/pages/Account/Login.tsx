@@ -1,5 +1,5 @@
 import React, { ChangeEvent, FormEvent, ReactNode, useEffect, useState } from 'react'
-import { useLocation } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import { useSelector } from 'react-redux';
 import { AppState } from '../../store';
 import { useDispatch } from 'react-redux';
@@ -38,7 +38,8 @@ export const Login = () => {
 
     const dispatch = useDispatch();
     const location = useLocation();
-
+    //Cac hook ko duoc goi o trong ham callback
+    const navigate = useNavigate();
     useEffect(()=>{
       dispatch(logout() as any);
     }, [dispatch]);
@@ -57,7 +58,7 @@ export const Login = () => {
       if(email&&password){
         console.log('Đang gửi dữ liệu:', { email, password });
         const {from} = location.state || {from: '/'};
-        dispatch(login(email, password, from) as any);
+        dispatch(login(email, password, from, navigate) as any);
       }
     });
   //Neu submit thi sao v

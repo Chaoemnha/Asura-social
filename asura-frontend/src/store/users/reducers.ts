@@ -2,8 +2,6 @@ import {
   LOAD_USER_PAGING_FAILURE,
   LOAD_USER_PAGING_REQUEST,
   LOAD_USER_PAGING_SUCCESS,
-  RESET_PAGING,
-  SET_USERS_KEYWORD,
   UsersState,
 } from "./types";
 import { UsersActionTypes } from "./types";
@@ -15,7 +13,6 @@ const initialState: UsersState = {
   loading: false,
   deletedCount: 0,
   error: null,
-  keyword: "",
 };
 
 export const userReducer = (
@@ -27,7 +24,6 @@ export const userReducer = (
       return {
         ...state,
         loading: true,
-        keyword: action.payload,
       };
     }
     case LOAD_USER_PAGING_SUCCESS: {
@@ -41,24 +37,11 @@ export const userReducer = (
         pageSize: action.payload.pageSize,
       };
     }
-    case RESET_PAGING: {
-      return {
-        ...state,
-        keyword: "",
-      };
-    }
-    case SET_USERS_KEYWORD: {
-      return {
-        ...state,
-        keyword: action.payload,
-      };
-    }
     case LOAD_USER_PAGING_FAILURE: {
       return {
         ...state,
         error: action.payload.error,
         loading: false,
-        keyword: "",
       };
     }
     default:

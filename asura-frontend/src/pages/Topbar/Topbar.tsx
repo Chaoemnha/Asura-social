@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { logout } from '../../store/account/actions';
 import { useSelector } from 'react-redux';
 import { AppState } from '../../store';
-import { loadUsersPaging, setUsersKeyword } from '../../store/users/actions';
+import { loadUsersPaging } from '../../store/users/actions';
 
 export const Topbar = () => {
   const [isOptShow, setIsOptShow] = useState(false);

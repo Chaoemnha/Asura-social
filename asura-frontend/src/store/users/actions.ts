@@ -1,13 +1,17 @@
 import { Dispatch } from "redux";
 import {
+  ADD_USER_FAILURE,
+  ADD_USER_REQUEST,
+  ADD_USER_SUCCESS,
+  IAddUserRequest,
   LOAD_USER_PAGING_FAILURE,
   LOAD_USER_PAGING_REQUEST,
   LOAD_USER_PAGING_SUCCESS,
-  RESET_PAGING,
-  SET_USERS_KEYWORD,
   UsersActionTypes,
 } from "./types";
 import { userService } from "../../services/user.service";
+import { NavigateFunction } from "react-router";
+import { urlConstants } from "../../url-constants/url-constants";
 
 export const loadUsersPaging = (currentPage: number, keyword: string = "") => {
   return async (dispatch: Dispatch<UsersActionTypes>) => {
@@ -26,15 +30,16 @@ export const loadUsersPaging = (currentPage: number, keyword: string = "") => {
   };
 };
 
-export const resetPaging = (): UsersActionTypes => {
-  return {
-    type: RESET_PAGING,
-  };
-};
-
-export const setUsersKeyword = (keyword: string) => {
-  return {
-    type: SET_USERS_KEYWORD,
-    payload: keyword,
+export const addUser = (user: IAddUserRequest, navigate: NavigateFunction) => {
+  return async (dispatch: Dispatch<UsersActionTypes>) => {
+    try {
+      dispatch({ type: ADD_USER_REQUEST });
+      await userService.addUser(user);
+      dispatch({ type: ADD_USER_SUCCESS });
+      navigate(urlConstants.USER_LIST);
+      console.log("object");
+    } catch (error) {
+      dispatch({ type: ADD_USER_FAILURE, payload: { error: error } });
+    }
   };
 };

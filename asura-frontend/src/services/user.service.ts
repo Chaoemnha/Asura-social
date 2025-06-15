@@ -1,5 +1,5 @@
 import { api, IPagination } from "../helpers";
-import { IUser } from "../store/users/types";
+import { IAddUserRequest, IUser } from "../store/users/types";
 
 //login la Promise void vi ham fetch ko return gia tri trong ham then cuoi
 const login = async (email: string, password: string) => {
@@ -32,10 +32,16 @@ const getUsersPaging = async (
 const logout = () => {
   sessionStorage.removeItem("user");
 };
-
+const addUser = async (user: IAddUserRequest): Promise<any> => {
+  const res = await api.post("/users", user).then((response) => {
+    return response.data;
+  });
+  return res;
+};
 export const userService = {
   login,
   logout,
   getCurrentLoginUser,
   getUsersPaging,
+  addUser,
 };

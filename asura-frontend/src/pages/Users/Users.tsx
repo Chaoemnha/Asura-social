@@ -5,6 +5,8 @@ import {IUser} from '../../store/users/types'
 import { useDispatch } from 'react-redux'
 import { loadUsersPaging } from '../../store/users/actions'
 import { Pagination } from '../../components'
+import { Link } from 'react-router-dom'
+import { urlConstants } from '../../url-constants/url-constants'
 
 export const Users = () => {
   const users: IUser [] = useSelector((state: AppState)=>state.users.items);
@@ -42,7 +44,7 @@ export const Users = () => {
   <h1 className="h3 mb-2 text-gray-800">Danh sách người dùng</h1>
   {/* DataTales Example */}
   <div className="card shadow mb-4">
-    <div className="card-header py-3">
+    <div className="card-header py-3 d-flex justify-content-between align-items-center">
       <h6 className="m-0 font-weight-bold text-primary">{(sessionStorage.getItem('searchKeyword') && sessionStorage.getItem('searchKeyword') != "")
       ? `Kết quả tìm kiếm cho: ${sessionStorage.getItem('searchKeyword')}`:"Danh sách người dùng"
       }
@@ -54,7 +56,8 @@ export const Users = () => {
       >
         Hủy
       </button>
-    )}</h6>
+    )}</h6><Link to={urlConstants.USER_ADD} className='btn btn-outline-success btn-sm'>
+      <span className='fa fa-plus'>Thêm mới</span></Link>
     </div>
     <div className="card-body">
       <div className="table-responsive">

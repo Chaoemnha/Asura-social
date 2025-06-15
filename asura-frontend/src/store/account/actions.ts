@@ -10,9 +10,14 @@ import {
   LOGIN_SUCCESS,
 } from "./types";
 import { userService } from "../../services/user.service";
-import { history } from "../../helpers/history";
+import { NavigateFunction } from "react-router";
 
-export const login = (email: string, password: string, from: string) => {
+export const login = (
+  email: string,
+  password: string,
+  from: string,
+  navigate: NavigateFunction
+) => {
   //Khi gui action cai thi no se dispatch ra loginRequest
   return async (dispatch: Dispatch<AccountActionTypes>) => {
     dispatch({
@@ -29,7 +34,7 @@ export const login = (email: string, password: string, from: string) => {
         type: LOGIN_SUCCESS,
         payload: response,
       });
-      history.push(from);
+      navigate(from);
     } catch (error) {
       dispatch({
         type: LOGIN_FAILURE,
