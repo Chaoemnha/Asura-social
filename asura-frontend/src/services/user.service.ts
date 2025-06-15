@@ -16,11 +16,14 @@ const getCurrentLoginUser = async (): Promise<any> => {
   });
 };
 const getUsersPaging = async (
-  currentPage: number
+  currentPage: number,
+  keyword: string
 ): Promise<IPagination<IUser>> => {
   const res = await api
-    .get<IPagination<IUser>>(`/users/paging/${currentPage}`)
+    .get<IPagination<IUser>>(`/users/paging/${currentPage}?keyword=${keyword}`)
     .then((response) => {
+      response.data.keyword = keyword;
+      console.log(response);
       return response.data;
     });
   return res;

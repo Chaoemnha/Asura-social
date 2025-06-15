@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './App.css';
 import './styles/sb-admin-2.css';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
@@ -9,6 +9,16 @@ import { AccountRoute } from './components/AccountRoute';
 import { Home } from './pages/Home/Home';
 import { Users } from './pages/Users/Users';
 function App() {
+  useEffect(() => {
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css';
+    document.head.appendChild(link);
+    
+    return () => {
+      document.head.removeChild(link);
+    };
+  }, []);
   return (
     <div className="App" id='wrapper'>
       <Router>

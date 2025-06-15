@@ -11,7 +11,6 @@ export const Users = () => {
   const totalItems = useSelector((state: AppState)=>state.users.total);
   //Gio ms biet pageSize no lay tu respone tu backend
   const pageSize = useSelector((state: AppState)=>state.users.pageSize);
-
   const [currentPage, setCurrentPage] = useState(1);
   console.log(users);
   const dispatch = useDispatch();
@@ -22,7 +21,8 @@ export const Users = () => {
 
   const onPageChanged = (pageNumber: number)=>{
     setCurrentPage(pageNumber);
-    dispatch(loadUsersPaging(pageNumber) as any);
+    const searchKeyword: string = sessionStorage.getItem('searchKeyword')??"";
+    dispatch(loadUsersPaging(pageNumber, searchKeyword) as any);
   }
   //Lay tablebody ra thanh 1 bien la mang JSX khi lay cac thuoc tinh user hien thi ra JSX
   const userElements: JSX.Element[]=users.map((user)=>{
@@ -43,7 +43,18 @@ export const Users = () => {
   {/* DataTales Example */}
   <div className="card shadow mb-4">
     <div className="card-header py-3">
-      <h6 className="m-0 font-weight-bold text-primary">Danh sách người dùng</h6>
+      <h6 className="m-0 font-weight-bold text-primary">{(sessionStorage.getItem('searchKeyword') && sessionStorage.getItem('searchKeyword') != "")
+      ? `Kết quả tìm kiếm cho: ${sessionStorage.getItem('searchKeyword')}`:"Danh sách người dùng"
+      }
+    {(sessionStorage.getItem('searchKeyword') && sessionStorage.getItem('searchKeyword') != "") && (
+      <button
+        className="btn btn-sm btn-secondary ml-3"
+        onClick={() => {dispatch(loadUsersPaging(1) as any); sessionStorage.removeItem('searchKeyword')}}
+        style={{ marginLeft: 12 }}
+      >
+        Hủy
+      </button>
+    )}</h6>
     </div>
     <div className="card-body">
       <div className="table-responsive">

@@ -3,6 +3,7 @@ export interface IPagination<T> {
   page: number;
   pageSize: number;
   items: T[];
+  keyword: string;
 }
 //Class nay chua du lieu cho viec phan trang, giup ta co the quan ly, su dung
 //cac thuoc tinh tren

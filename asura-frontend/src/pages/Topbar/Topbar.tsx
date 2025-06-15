@@ -3,18 +3,24 @@ import { useDispatch } from 'react-redux';
 import { logout } from '../../store/account/actions';
 import { useSelector } from 'react-redux';
 import { AppState } from '../../store';
+import { loadUsersPaging, setUsersKeyword } from '../../store/users/actions';
 
 export const Topbar = () => {
   const [isOptShow, setIsOptShow] = useState(false);
   const [isAlertShow, setIsAlertShow] = useState(false);
   const [isMesShow, setIsMesShow] = useState(false);
+  const [searchKeyword, setSearchKeyword] = useState("");
   const dispatch = useDispatch();
   //ham chon 1 phan cua state hien tai theo kieu <AppState> la {user:{...}, loading:...,...}, nhung thuc ra state dang la {account:{...}, _persist:{}}
   const userSelect = useSelector<AppState>(
     (state) => state
   ) as any;
+
   const user = userSelect.account.user;
-  console.log(user);
+  const handleSearch = () => {
+    dispatch(loadUsersPaging(1, searchKeyword) as any);
+    sessionStorage.setItem('searchKeyword',searchKeyword);
+  };
   return (
       <nav className="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
         {/* Sidebar Toggle (Topbar) */}
@@ -24,9 +30,9 @@ export const Topbar = () => {
         {/* Topbar Search */}
         <form className="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
           <div className="input-group">
-            <input type="text" className="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2" />
+            <input type="text" className="form-control bg-light border-0 small" placeholder="Tìm kiếm..." aria-label="Search" aria-describedby="basic-addon2"  value={searchKeyword} onChange={(e)=>setSearchKeyword(e.target.value)}/>
             <div className="input-group-append">
-              <button className="btn btn-primary" type="button">
+              <button className="btn btn-primary" type="button"  onClick={handleSearch}>
                 <i className="fas fa-search fa-sm" />
               </button>
             </div>
@@ -43,10 +49,10 @@ export const Topbar = () => {
             <div className="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in" aria-labelledby="searchDropdown">
               <form className="form-inline mr-auto w-100 navbar-search">
                 <div className="input-group">
-                  <input type="text" className="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2" />
+                  <input type="text" className="form-control bg-light border-0 small" placeholder="Tìm kiếm..." aria-label="Search" aria-describedby="basic-addon2" value={searchKeyword} onChange={(e)=>setSearchKeyword(e.target.value)}/>
                   <div className="input-group-append">
-                    <button className="btn btn-primary" type="button">
-                      <i className="fas fa-search fa-sm" />
+                    <button className="btn btn-primary" type="button" onClick={handleSearch}>
+                      <i className="fas fa-search fa-sm"/>
                     </button>
                   </div>
                 </div>
@@ -55,7 +61,7 @@ export const Topbar = () => {
           </li>
           {/* Nav Item - Alerts */}
           <li className="nav-item dropdown no-arrow mx-1">
-            <a className={"nav-link dropdown-toggle"+(isAlertShow?" show":"")} href="/#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded={isAlertShow?"true":"false"} onClick={()=>setIsAlertShow(!isAlertShow)}>
+            <a className={"nav-link dropdown-toggle"+(isAlertShow?" show":"")} id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded={isAlertShow?"true":"false"} onClick={()=>setIsAlertShow(!isAlertShow)}>
               <i className="fas fa-bell fa-fw" />
               {/* Counter - Alerts */}
               <span className="badge badge-danger badge-counter">3+</span>
@@ -103,7 +109,7 @@ export const Topbar = () => {
           </li>
           {/* Nav Item - Messages */}
           <li className={"nav-item dropdown no-arrow mx-1"+(isMesShow?" show":"")}>
-            <a className="nav-link dropdown-toggle" href="/#" id="messagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded={isMesShow?"true":"false"} onClick={()=>setIsMesShow(!isMesShow)}>
+            <a className="nav-link dropdown-toggle" id="messagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded={isMesShow?"true":"false"} onClick={()=>setIsMesShow(!isMesShow)}>
               <i className="fas fa-envelope fa-fw" />
               {/* Counter - Messages */}
               <span className="badge badge-danger badge-counter">7</span>
@@ -163,7 +169,7 @@ export const Topbar = () => {
           <div className="topbar-divider d-none d-sm-block" />
           {/* Nav Item - User Information */}
           <li className={"nav-item dropdown no-arrow"+(isOptShow?" show":"")}>
-            <a className="nav-link dropdown-toggle" href="/#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded={(isOptShow?"true":"false")}  onClick={()=>setIsOptShow(!isOptShow)}>
+            <a className="nav-link dropdown-toggle" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded={(isOptShow?"true":"false")}  onClick={()=>setIsOptShow(!isOptShow)}>
               <span className="mr-2 d-lg-inline text-gray-600 small font-weight-bold">{user?(user.first_name+" "+user.last_name):"a"}</span>
               <img className="img-profile rounded-circle" src={user?(user.avatar):undefined} alt=''/>
             </a>

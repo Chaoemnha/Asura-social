@@ -31,7 +31,7 @@ export const Sidebar = () => {
     </div>
     {/* Nav Item - Pages Collapse Menu */}
     <li className="nav-item">
-      <a className={"nav-link"+(isCompCollapsed?" collapsed":"")} href="/#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded={isCompCollapsed?"true":"false"} aria-controls="collapseTwo" onClick={()=>setIsCompCollapsed(!isCompCollapsed)}>
+      <a role='button' className={"nav-link"+(isCompCollapsed?" collapsed":"")} data-toggle="collapse" data-target="#collapseTwo" aria-expanded={isCompCollapsed?"true":"false"} aria-controls="collapseTwo" onClick={()=>setIsCompCollapsed(!isCompCollapsed)}>
         <i className="fas fa-fw fa-cog" />
         <span>Hệ thống</span>
       </a>
@@ -45,7 +45,7 @@ export const Sidebar = () => {
     </li>
     {/* Nav Item - Utilities Collapse Menu */}
     <li className="nav-item">
-      <a className={"nav-link"+(isUtilColl?" collapsed":"")} href="/#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded={isUtilColl?"true":"false"} aria-controls="collapseUtilities" onClick={()=>setIsUtilColl(!isUtilColl)}>
+      <a role='button' className={"nav-link"+(isUtilColl?" collapsed":"")} data-toggle="collapse" data-target="#collapseUtilities" aria-expanded={isUtilColl?"true":"false"} aria-controls="collapseUtilities" onClick={()=>setIsUtilColl(!isUtilColl)}>
         <i className="fas fa-fw fa-wrench" />
         <span>Utilities</span>
       </a>

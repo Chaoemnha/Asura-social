@@ -3,7 +3,8 @@ import { IPagination } from "../../helpers/pagination";
 export const LOAD_USER_PAGING_REQUEST = "LOAD_USER_PAGING_REQUEST"; //Tao action
 export const LOAD_USER_PAGING_SUCCESS = "LOAD_USER_PAGING_SUCCESS";
 export const LOAD_USER_PAGING_FAILURE = "LOAD_USER_PAGING_FAILURE";
-
+export const RESET_PAGING = "RESET_PAGING";
+export const SET_USERS_KEYWORD = "SET_USERS_KEYWORD";
 export interface IUser {
   _id: string;
   first_name: string;
@@ -13,9 +14,17 @@ export interface IUser {
   avatar: string;
   date: Date;
 }
+interface ResetPaging {
+  type: typeof RESET_PAGING;
+}
 
+interface SetUsersKeyword {
+  type: typeof SET_USERS_KEYWORD;
+  payload: string;
+}
 interface LoadUserPagingRequest {
   type: typeof LOAD_USER_PAGING_REQUEST;
+  payload: string;
 }
 
 interface LoadUserPagingSuccess {
@@ -38,9 +47,12 @@ export interface UsersState {
   loading: boolean;
   deletedCount: number;
   error: unknown;
+  keyword: string;
 }
 
 export type UsersActionTypes =
   | LoadUserPagingRequest
   | LoadUserPagingSuccess
-  | LoadUserPagingFailure;
+  | LoadUserPagingFailure
+  | ResetPaging
+  | SetUsersKeyword;

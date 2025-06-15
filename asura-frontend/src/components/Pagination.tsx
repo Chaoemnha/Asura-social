@@ -44,7 +44,7 @@ export const Pagination = (props: PaginationProps)=>{
                 )
             })}
             <li className={`page-item ${currentPage===totalPages?'disabled':''}`}>
-                <button className="page-link" onClick={()=>handleClick(totalPages)}>Sau</button>
+                <button className="page-link" onClick={()=>handleClick(currentPage+1)}>Sau</button>
             </li></ul>
         </nav>
     )
