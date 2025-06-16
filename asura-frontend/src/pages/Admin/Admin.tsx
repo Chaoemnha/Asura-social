@@ -5,18 +5,22 @@ import { AppState } from '../../store';
 import { Sidebar } from '../Sidebar/Sidebar';
 import { Topbar } from '../Topbar/Topbar';
 import {getCurrentLoginUser} from '../../store/account/actions';
+import { AlertState } from '../../store/alert/types';
 
 export const Admin = () => {
   //P select đúng state bị tác động bởi LOGOUT
   const token = useSelector<AppState>(
       (state: any) => state.account.token
     );
+    const alert = useSelector<AppState>(
+      (state)=>state.alert
+    ) as AlertState;
   const navigate = useNavigate();
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getCurrentLoginUser() as any);
   }, [dispatch]);
-
+  useEffect(()=>console.log(alert),[alert]);
   useEffect(() => {
     if (token === null) {
       navigate('/login', { replace: true });
@@ -33,6 +37,7 @@ export const Admin = () => {
       <Topbar/>
       {/* Begin Page Content */}
       <div className="container-fluid">
+        {alert.message&&(<div className={"alert "+(alert.type==='ALERT_SUCCESS'?'alert-success':'alert-danger')}>{alert.message}</div>)}
         <Outlet/>
       </div>
       {/* /.container-fluid */}

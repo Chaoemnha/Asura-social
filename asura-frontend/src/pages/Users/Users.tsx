@@ -24,7 +24,6 @@ export const Users = () => {
   const onPageChanged = (pageNumber: number)=>{
     setCurrentPage(pageNumber);
     const searchKeyword: string = sessionStorage.getItem('searchKeyword')??"";
-    dispatch(loadUsersPaging(pageNumber, searchKeyword) as any);
   }
   //Lay tablebody ra thanh 1 bien la mang JSX khi lay cac thuoc tinh user hien thi ra JSX
   const userElements: JSX.Element[]=users.map((user)=>{

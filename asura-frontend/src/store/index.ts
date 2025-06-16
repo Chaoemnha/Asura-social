@@ -5,10 +5,12 @@ import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import { setAuthToken } from "../helpers/setAuthToken";
 import { userReducer } from "./users/reducers";
+import { alertReducer } from "./alert/reducer";
 
 const rootReducer = combineReducers({
   account: accountReducer,
   users: userReducer,
+  alert: alertReducer,
 });
 
 const persistConfig = {

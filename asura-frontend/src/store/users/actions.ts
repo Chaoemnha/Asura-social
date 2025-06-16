@@ -12,6 +12,8 @@ import {
 import { userService } from "../../services/user.service";
 import { NavigateFunction } from "react-router";
 import { urlConstants } from "../../url-constants/url-constants";
+import { alertError, alertSuccess, clearAlert } from "../alert/actions";
+import { AlertActionTypes } from "../alert/types";
 
 export const loadUsersPaging = (currentPage: number, keyword: string = "") => {
   return async (dispatch: Dispatch<UsersActionTypes>) => {
@@ -31,15 +33,19 @@ export const loadUsersPaging = (currentPage: number, keyword: string = "") => {
 };
 
 export const addUser = (user: IAddUserRequest, navigate: NavigateFunction) => {
-  return async (dispatch: Dispatch<UsersActionTypes>) => {
+  return async (dispatch: Dispatch<UsersActionTypes | AlertActionTypes>) => {
     try {
       dispatch({ type: ADD_USER_REQUEST });
       await userService.addUser(user);
       dispatch({ type: ADD_USER_SUCCESS });
+      dispatch(alertSuccess("Thêm mới người dùng thành công!"));
       navigate(urlConstants.USER_LIST);
-      console.log("object");
     } catch (error) {
       dispatch({ type: ADD_USER_FAILURE, payload: { error: error } });
+      dispatch(alertError("Thêm mới người dùng thất bại"));
     }
+    setTimeout(() => {
+      dispatch(clearAlert());
+    }, 3000);
   };
 };

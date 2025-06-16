@@ -4,6 +4,7 @@ import { logout } from '../../store/account/actions';
 import { useSelector } from 'react-redux';
 import { AppState } from '../../store';
 import { loadUsersPaging } from '../../store/users/actions';
+import { AccountState } from '../../store/account/types';
 
 export const Topbar = () => {
   const [isOptShow, setIsOptShow] = useState(false);
@@ -13,10 +14,10 @@ export const Topbar = () => {
   const dispatch = useDispatch();
   //ham chon 1 phan cua state hien tai theo kieu <AppState> la {user:{...}, loading:...,...}, nhung thuc ra state dang la {account:{...}, _persist:{}}
   const userSelect = useSelector<AppState>(
-    (state) => state
-  ) as any;
+    (state) => state.account
+  ) as AccountState;
 
-  const user = userSelect.account.user;
+  const user = userSelect.user;
   const handleSearch = () => {
     dispatch(loadUsersPaging(1, searchKeyword) as any);
     sessionStorage.setItem('searchKeyword',searchKeyword);
