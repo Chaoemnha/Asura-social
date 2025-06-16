@@ -33,13 +33,13 @@ export const Sidebar = () => {
     <li className="nav-item">
       <a role='button' className={"nav-link"+(isCompCollapsed?" collapsed":"")} data-toggle="collapse" data-target="#collapseTwo" aria-expanded={isCompCollapsed?"true":"false"} aria-controls="collapseTwo" onClick={()=>setIsCompCollapsed(!isCompCollapsed)}>
         <i className="fas fa-fw fa-cog" />
-        <span>Hệ thống</span>
+        <span>Interfaces</span>
       </a>
       <div id="collapseTwo" className={"collapse"+(isCompCollapsed?"":" show")} aria-labelledby="headingTwo" data-parent="#accordionSidebar">
         <div className="bg-white py-2 collapse-inner rounded">
-          <h6 className="collapse-header">Hệ thống:</h6>
-          <Link className="collapse-item" to='/users'>Người dùng</Link>
-          <a className="collapse-item" href="cards.html">Tài khoản</a>
+          <h6 className="collapse-header">Interfaces:</h6>
+          <Link className="collapse-item" to='/users'>User</Link>
+          <a className="collapse-item" href="cards.html">Account</a>
         </div>
       </div>
     </li>

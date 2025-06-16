@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux'
 import { loadUsersPaging } from '../../store/users/actions'
 import { Pagination } from '../../components'
 import { Link } from 'react-router-dom'
-import { urlConstants } from '../../url-constants/url-constants'
+import { urlConstants } from '../../constants/url-constants'
 
 export const Users = () => {
   const users: IUser [] = useSelector((state: AppState)=>state.users.items);
@@ -33,6 +33,7 @@ export const Users = () => {
         <td>{user.first_name}</td>
         <td>{user.last_name}</td>
         <td>{user.email}</td>
+        <td><Link to={urlConstants.USER_EDIT+user._id}>Edit</Link></td>
       </tr>
     )
   })
@@ -40,12 +41,12 @@ export const Users = () => {
     <Fragment>
         <div>
   {/* Page Heading */}
-  <h1 className="h3 mb-2 text-gray-800">Danh sách người dùng</h1>
+  <h1 className="h3 mb-2 text-gray-800">User list</h1>
   {/* DataTales Example */}
   <div className="card shadow mb-4">
     <div className="card-header py-3 d-flex justify-content-between align-items-center">
       <h6 className="m-0 font-weight-bold text-primary">{(sessionStorage.getItem('searchKeyword') && sessionStorage.getItem('searchKeyword') != "")
-      ? `Kết quả tìm kiếm cho: ${sessionStorage.getItem('searchKeyword')}`:"Danh sách người dùng"
+      ? `Search results for: ${sessionStorage.getItem('searchKeyword')}`:"User list"
       }
     {(sessionStorage.getItem('searchKeyword') && sessionStorage.getItem('searchKeyword') != "") && (
       <button
@@ -53,20 +54,21 @@ export const Users = () => {
         onClick={() => {dispatch(loadUsersPaging(1) as any); sessionStorage.removeItem('searchKeyword')}}
         style={{ marginLeft: 12 }}
       >
-        Hủy
+        Cancel
       </button>
     )}</h6><Link to={urlConstants.USER_ADD} className='btn btn-outline-success btn-sm'>
-      <span className='fa fa-plus'>Thêm mới</span></Link>
+      <span className='fa fa-plus'>Add new</span></Link>
     </div>
     <div className="card-body">
       <div className="table-responsive">
         <table className="table table-bordered" id="dataTable" width="100%" cellSpacing={0}>
           <thead>
             <tr>
-              <th>Ảnh đại diện</th>
-              <th>Họ</th>
-              <th>Tên</th>
+              <th>Avatar</th>
+              <th>FName</th>
+              <th>LName</th>
               <th>Email</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>

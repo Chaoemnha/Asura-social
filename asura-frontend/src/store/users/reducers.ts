@@ -1,7 +1,13 @@
 import {
+  GET_USER_BY_ID_FAILURE,
+  GET_USER_BY_ID_REQUEST,
+  GET_USER_BY_ID_SUCCESS,
   LOAD_USER_PAGING_FAILURE,
   LOAD_USER_PAGING_REQUEST,
   LOAD_USER_PAGING_SUCCESS,
+  UPDATE_USER_FAILURE,
+  UPDATE_USER_REQUEST,
+  UPDATE_USER_SUCCESS,
   UsersState,
 } from "./types";
 import { UsersActionTypes } from "./types";
@@ -13,6 +19,7 @@ const initialState: UsersState = {
   loading: false,
   deletedCount: 0,
   error: null,
+  editUser: null,
 };
 
 export const userReducer = (
@@ -42,6 +49,47 @@ export const userReducer = (
         ...state,
         error: action.payload.error,
         loading: false,
+      };
+    }
+    case GET_USER_BY_ID_REQUEST: {
+      return {
+        ...state,
+        loading: true,
+      };
+    }
+    case GET_USER_BY_ID_SUCCESS: {
+      return {
+        ...state,
+        editUser: action.payload.user,
+        loading: false,
+        error: null,
+      };
+    }
+    case GET_USER_BY_ID_FAILURE: {
+      return {
+        ...state,
+        loading: false,
+        error: action.payload.error,
+      };
+    }
+    case UPDATE_USER_REQUEST: {
+      return {
+        ...state,
+        loading: true,
+      };
+    }
+    case UPDATE_USER_SUCCESS: {
+      return {
+        ...state,
+        loading: false,
+        error: null,
+      };
+    }
+    case UPDATE_USER_FAILURE: {
+      return {
+        ...state,
+        loading: false,
+        error: action.payload.error,
       };
     }
     default:

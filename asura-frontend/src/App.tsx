@@ -9,10 +9,11 @@ import { PrivateRoute } from './components/PrivateRoute';
 import { AccountRoute } from './components/AccountRoute';
 import { Home } from './pages/Home/Home';
 import { Users } from './pages/Users/Users';
-import {urlConstants} from './url-constants/url-constants';
+import {urlConstants} from './constants/url-constants';
 import { AddUser } from './pages/Users/AddUser';
+import { EditUser } from './pages/Users/EditUser';
 function App() {
-  console.log(urlConstants.USER_LIST);
+  console.log(urlConstants.USER_EDIT);
   return (
     <div className="App" id='wrapper'>
       <BrowserRouter>
@@ -28,6 +29,7 @@ function App() {
     <Route path={urlConstants.USER_LIST} element={<Users />} />
     <Route path={urlConstants.HOME} element={<Home />} />
     <Route path={urlConstants.USER_ADD} element={<AddUser/>}/>
+    <Route path={urlConstants.USER_EDIT} element={<EditUser/>}/>
   </Route>
   <Route
     path="/login"

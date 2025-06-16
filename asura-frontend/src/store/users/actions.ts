@@ -3,25 +3,30 @@ import {
   ADD_USER_FAILURE,
   ADD_USER_REQUEST,
   ADD_USER_SUCCESS,
+  GET_USER_BY_ID_FAILURE,
+  GET_USER_BY_ID_REQUEST,
+  GET_USER_BY_ID_SUCCESS,
   IAddUserRequest,
+  IUpdateUserRequest,
   LOAD_USER_PAGING_FAILURE,
   LOAD_USER_PAGING_REQUEST,
   LOAD_USER_PAGING_SUCCESS,
+  UPDATE_USER_FAILURE,
+  UPDATE_USER_REQUEST,
+  UPDATE_USER_SUCCESS,
   UsersActionTypes,
 } from "./types";
 import { userService } from "../../services/user.service";
 import { NavigateFunction } from "react-router";
-import { urlConstants } from "../../url-constants/url-constants";
+import { urlConstants } from "../../constants/url-constants";
 import { alertError, alertSuccess, clearAlert } from "../alert/actions";
 import { AlertActionTypes } from "../alert/types";
 
 export const loadUsersPaging = (currentPage: number, keyword: string = "") => {
   return async (dispatch: Dispatch<UsersActionTypes>) => {
     try {
-      console.log(keyword);
       dispatch({ type: LOAD_USER_PAGING_REQUEST, payload: keyword });
       const res = await userService.getUsersPaging(currentPage, keyword);
-      console.log(res);
       dispatch({
         type: LOAD_USER_PAGING_SUCCESS,
         payload: res,
@@ -47,5 +52,37 @@ export const addUser = (user: IAddUserRequest, navigate: NavigateFunction) => {
     setTimeout(() => {
       dispatch(clearAlert());
     }, 3000);
+  };
+};
+
+export const updateUser = (id: string, user: IUpdateUserRequest, navigate: NavigateFunction) => {
+  return async (dispatch: Dispatch<UsersActionTypes | AlertActionTypes>) => {
+    try {
+      dispatch({
+        type: UPDATE_USER_REQUEST,
+      });
+      await userService.updateUser(id, user);
+      dispatch({ type: UPDATE_USER_SUCCESS });
+      dispatch(alertSuccess("Cập nhật người dùng thành công"));
+      navigate(urlConstants.USER_LIST);
+    } catch (error) {
+      dispatch({ type: UPDATE_USER_FAILURE, payload: { error: error } });
+      dispatch(alertError("Thêm mới người dùng thất bại"));
+    }
+    setTimeout(() => {
+      dispatch(clearAlert());
+    }, 3000);
+  };
+};
+
+export const getUserById = (id: string) => {
+  return async (dispatch: Dispatch<UsersActionTypes>) => {
+    try {
+      dispatch({ type: GET_USER_BY_ID_REQUEST });
+      const res = await userService.getUserById(id);
+      dispatch({ type: GET_USER_BY_ID_SUCCESS, payload: { user: res } });
+    } catch (error) {
+      dispatch({ type: GET_USER_BY_ID_FAILURE, payload: { error: error } });
+    }
   };
 };

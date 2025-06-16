@@ -34,7 +34,7 @@ export const Pagination = (props: PaginationProps)=>{
         <nav aria-label="...">
             <ul className="pagination justify-content-center">
             <li className={`page-item ${currentPage===1?'disabled': ''}`}>
-                <button className="page-link" onClick={()=>handleClick(currentPage-1)}>Trước</button>
+                <button className="page-link" onClick={()=>handleClick(currentPage-1)}>Previous</button>
             </li>
             {pages.map((page, index)=>{
                 return (
@@ -44,7 +44,7 @@ export const Pagination = (props: PaginationProps)=>{
                 )
             })}
             <li className={`page-item ${currentPage===totalPages?'disabled':''}`}>
-                <button className="page-link" onClick={()=>handleClick(currentPage+1)}>Sau</button>
+                <button className="page-link" onClick={()=>handleClick(currentPage+1)}>Next</button>
             </li></ul>
         </nav>
     )

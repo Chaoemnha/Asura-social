@@ -1,4 +1,7 @@
 import axios from "axios";
+import { store } from "../store";
+import { logout } from "../store/account/actions";
+import { UnknownAction } from "redux";
 
 const api = axios.create({
   baseURL: `${process.env.REACT_APP_API_URL}`,
@@ -11,7 +14,6 @@ const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     const token = sessionStorage.getItem("token");
-    console.log(token);
     if (token) {
       config.headers = config.headers || {};
       config.headers["x-auth-token"] = token;
@@ -19,7 +21,6 @@ api.interceptors.request.use(
     return config;
   },
   (error) => {
-    console.log(error);
     Promise.reject(error);
   }
 );
@@ -29,6 +30,7 @@ api.interceptors.response.use(
   (err) => {
     if (err.response && err.response.status === 401) {
       // todo
+      store.dispatch(logout() as UnknownAction);
     }
     return Promise.reject(err);
   }
