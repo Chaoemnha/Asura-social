@@ -48,6 +48,10 @@ class UserService {
       throw new HttpException(400, `User id is not exist. `);
     }
     let avatar = user.avatar; //De neu mail ms ko co avt thi dung cai nay
+    //ktra email truyen vao bi giong email user cu
+    if (user.email == model.email) {
+      throw new HttpException(400, `You must using the different email`);
+    }
     const checkEmailExist = await this.userSchema
       .find({
         $and: [{ email: { $eq: model.email } }, { _id: { $ne: userId } }],
@@ -153,6 +157,14 @@ class UserService {
     const deleteUser = await this.userSchema.findByIdAndDelete(userId).exec();
     if (!deleteUser) throw new HttpException(409, "Your id is invalid");
     return deleteUser;
+  }
+  public async deleteUsers(userIds: string[]): Promise<number | undefined> {
+    const result = await this.userSchema
+      .deleteMany({ _id: [...userIds] })
+      .exec();
+    if (!result.acknowledged)
+      throw new HttpException(409, "Your id is invalid");
+    return result.deletedCount;
   }
 }
 

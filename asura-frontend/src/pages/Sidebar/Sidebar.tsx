@@ -100,7 +100,7 @@ export const Sidebar = () => {
     <hr className="sidebar-divider d-none d-md-block" />
     {/* Sidebar Toggler (Sidebar) */}
     <div className="text-center d-none d-md-inline">
-      <button className="rounded-circle border-0" id="sidebarToggle" onClick={()=>setIsToggled(!isToggled)}/>
+      <button title="Submit Form" className="rounded-circle border-0" id="sidebarToggle" onClick={()=>setIsToggled(!isToggled)}></button>
     </div>
     {/* Sidebar Message */}
   </ul>

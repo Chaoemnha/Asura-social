@@ -57,6 +57,12 @@ const getUserById = async (id: string): Promise<IUser> => {
   });
   return res;
 };
+const deleteUsers = async (ids: string[]): Promise<any> => {
+  const res = await api.delete("/users", { data: ids }).then((response) => {
+    return response.data;
+  });
+  return res;
+};
 export const userService = {
   login,
   logout,
@@ -65,4 +71,5 @@ export const userService = {
   addUser,
   getUserById,
   updateUser,
+  deleteUsers,
 };

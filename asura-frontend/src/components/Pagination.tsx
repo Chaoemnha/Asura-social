@@ -25,7 +25,6 @@ export const Pagination = (props: PaginationProps)=>{
         return range;
     };
     const pages = range(startPageIndex, endPageIndex);
-
     const handleClick = (pageNumber: number)=>{
         setCurrentPage(pageNumber);
         props.onPageChanged(pageNumber);

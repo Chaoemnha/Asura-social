@@ -12,6 +12,9 @@ export const GET_USER_BY_ID_FAILURE = "GET_USER_BY_ID_FAILURE";
 export const UPDATE_USER_REQUEST = "UPDATE_USER_REQUEST";
 export const UPDATE_USER_SUCCESS = "UPDATE_USER_SUCCESS";
 export const UPDATE_USER_FAILURE = "UPDATE_USER_FAILURE";
+export const DELETE_USER_REQUEST = "DELETE_USER_REQUEST";
+export const DELETE_USER_SUCCESS = "DELETE_USER_SUCCESS";
+export const DELETE_USER_FAILURE = "DELETE_USER_FAILURE";
 
 export interface IUser {
   _id: string;
@@ -90,6 +93,19 @@ interface UpdateUserFailure {
     error: unknown;
   };
 }
+interface DeleteUserRequest {
+  type: typeof DELETE_USER_REQUEST;
+}
+interface DeleteUserSuccess {
+  type: typeof DELETE_USER_SUCCESS;
+}
+interface DeleteUserFailure {
+  type: typeof DELETE_USER_FAILURE;
+  payload: {
+    error: unknown;
+  };
+}
+
 export interface UsersState {
   items: IUser[];
   page: number;
@@ -113,4 +129,7 @@ export type UsersActionTypes =
   | UpdateUserFailure
   | GetUserByIdRequest
   | GetUserByIdSuccess
-  | GetUserByIdFailure;
+  | GetUserByIdFailure
+  | DeleteUserFailure
+  | DeleteUserRequest
+  | DeleteUserSuccess;

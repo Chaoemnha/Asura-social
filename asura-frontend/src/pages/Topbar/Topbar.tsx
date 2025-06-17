@@ -24,16 +24,12 @@ export const Topbar = () => {
   };
   return (
       <nav className="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-        {/* Sidebar Toggle (Topbar) */}
-        <button id="sidebarToggleTop" className="btn btn-link d-md-none rounded-circle mr-3">
-          <i className="fa fa-bars" />
-        </button>
         {/* Topbar Search */}
         <form className="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
           <div className="input-group">
             <input type="text" className="form-control bg-light border-0 small" placeholder="Search..." aria-label="Search" aria-describedby="basic-addon2"  value={searchKeyword} onChange={(e)=>setSearchKeyword(e.target.value)}/>
             <div className="input-group-append">
-              <button className="btn btn-primary" type="button"  onClick={handleSearch}>
+              <button title='search' className="btn btn-primary" type="button"  onClick={handleSearch}>
                 <i className="fas fa-search fa-sm" />
               </button>
             </div>
@@ -50,9 +46,9 @@ export const Topbar = () => {
             <div className="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in" aria-labelledby="searchDropdown">
               <form className="form-inline mr-auto w-100 navbar-search">
                 <div className="input-group">
-                  <input type="text" className="form-control bg-light border-0 small" placeholder="Tìm kiếm..." aria-label="Search" aria-describedby="basic-addon2" value={searchKeyword} onChange={(e)=>setSearchKeyword(e.target.value)}/>
+                  <input id='search' type="text" className="form-control bg-light border-0 small" placeholder="Tìm kiếm..." aria-label="Search" aria-describedby="basic-addon2" value={searchKeyword} onChange={(e)=>setSearchKeyword(e.target.value)}/>
                   <div className="input-group-append">
-                    <button className="btn btn-primary" type="button" onClick={handleSearch}>
+                    <button title='search' className="btn btn-primary" type="button" onClick={handleSearch}>
                       <i className="fas fa-search fa-sm"/>
                     </button>
                   </div>

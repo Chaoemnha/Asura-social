@@ -27,6 +27,18 @@
 .App-link {
   color: #61dafb;
 }
+.header-buttons{
+  position: absolute;
+  right: 10px;
+  top: 8px;
+}
+.header-buttons .btn{
+  margin-right: 0.2 rem;
+
+}
+.selected{
+  background-color: #eff0f3;
+}
 
 @keyframes App-logo-spin {
   from {

@@ -24,15 +24,20 @@ export default class UsersRoute implements Route {
       this.usersController.updateUser
     ); //update=>dung put
     this.router.get(this.path + "/:id", this.usersController.getUserById); //find
-    this.router.get(this.path, this.usersController.getAll); //find
+    this.router.get(this.path, this.usersController.getAll);
     this.router.get(
       this.path + "/paging/:page/",
       this.usersController.getAllPaging
-    ); //find
+    );
     this.router.delete(
       this.path + "/:id",
       authMiddleware,
       this.usersController.deleteUser
-    ); //find
+    );
+    this.router.delete(
+      this.path,
+      authMiddleware,
+      this.usersController.deleteUsers
+    );
   }
 }
