@@ -1,0 +1,19 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    // Attach tuc la chung ta se attach cai process ay vao
+    // Voi ten thi chung ta se debug bang nodemon
+    // Ta can attch den process nen can cau hinh processId, nhung thu khac xoa het
+    // protocol: inspector la no hien thi luon value luon (Gio Nodejs mac dinh dieu nay roi nen khong can)
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "attach",
+            "name": "Node: Nodemon",
+            "processId": "${command:PickProcess}",
+            "restart": true,
+        }
+    ]
+}

@@ -1,0 +1,197 @@
+import React, { useState } from 'react'
+import { useDispatch } from 'react-redux';
+import { logout } from '../../store/account/actions';
+import { useSelector } from 'react-redux';
+import { AppState } from '../../store';
+import { loadUsersPaging } from '../../store/users/actions';
+import { AccountState } from '../../store/account/types';
+
+export const Topbar = () => {
+  const [isOptShow, setIsOptShow] = useState(false);
+  const [isAlertShow, setIsAlertShow] = useState(false);
+  const [isMesShow, setIsMesShow] = useState(false);
+  const [searchKeyword, setSearchKeyword] = useState("");
+  const dispatch = useDispatch();
+  //ham chon 1 phan cua state hien tai theo kieu <AppState> la {user:{...}, loading:...,...}, nhung thuc ra state dang la {account:{...}, _persist:{}}
+  const userSelect = useSelector<AppState>(
+    (state) => state.account
+  ) as AccountState;
+
+  const user = userSelect.user;
+  const handleSearch = () => {
+    dispatch(loadUsersPaging(1, searchKeyword) as any);
+    sessionStorage.setItem('searchKeyword',searchKeyword);
+  };
+  return (
+      <nav className="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+        {/* Topbar Search */}
+        <form className="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+          <div className="input-group">
+            <input type="text" className="form-control bg-light border-0 small" placeholder="Search..." aria-label="Search" aria-describedby="basic-addon2"  value={searchKeyword} onChange={(e)=>setSearchKeyword(e.target.value)}/>
+            <div className="input-group-append">
+              <button title='search' className="btn btn-primary" type="button"  onClick={handleSearch}>
+                <i className="fas fa-search fa-sm" />
+              </button>
+            </div>
+          </div>
+        </form>
+        {/* Topbar Navbar */}
+        <ul className="navbar-nav ml-auto">
+          {/* Nav Item - Search Dropdown (Visible Only XS) */}
+          <li className="nav-item dropdown no-arrow d-sm-none">
+            <a className="nav-link dropdown-toggle" href="/#" id="searchDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i className="fas fa-search fa-fw" />
+            </a>
+            {/* Dropdown - Messages */}
+            <div className="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in" aria-labelledby="searchDropdown">
+              <form className="form-inline mr-auto w-100 navbar-search">
+                <div className="input-group">
+                  <input id='search' type="text" className="form-control bg-light border-0 small" placeholder="Tìm kiếm..." aria-label="Search" aria-describedby="basic-addon2" value={searchKeyword} onChange={(e)=>setSearchKeyword(e.target.value)}/>
+                  <div className="input-group-append">
+                    <button title='search' className="btn btn-primary" type="button" onClick={handleSearch}>
+                      <i className="fas fa-search fa-sm"/>
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </li>
+          {/* Nav Item - Alerts */}
+          <li className="nav-item dropdown no-arrow mx-1">
+            <a className={"nav-link dropdown-toggle"+(isAlertShow?" show":"")} id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded={isAlertShow?"true":"false"} onClick={()=>setIsAlertShow(!isAlertShow)}>
+              <i className="fas fa-bell fa-fw" />
+              {/* Counter - Alerts */}
+              <span className="badge badge-danger badge-counter">3+</span>
+            </a>
+            {/* Dropdown - Alerts */}
+            <div className={"dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"+(isAlertShow?" show":"")} aria-labelledby="alertsDropdown">
+              <h6 className="dropdown-header">
+                Alerts Center
+              </h6>
+              <a className="dropdown-item d-flex align-items-center" href="/#">
+                <div className="mr-3">
+                  <div className="icon-circle bg-primary">
+                    <i className="fas fa-file-alt text-white" />
+                  </div>
+                </div>
+                <div>
+                  <div className="small text-gray-500">December 12, 2019</div>
+                  <span className="font-weight-bold">A new monthly report is ready to download!</span>
+                </div>
+              </a>
+              <a className="dropdown-item d-flex align-items-center" href="/#">
+                <div className="mr-3">
+                  <div className="icon-circle bg-success">
+                    <i className="fas fa-donate text-white" />
+                  </div>
+                </div>
+                <div>
+                  <div className="small text-gray-500">December 7, 2019</div>
+                  $290.29 has been deposited into your account!
+                </div>
+              </a>
+              <a className="dropdown-item d-flex align-items-center" href="/#">
+                <div className="mr-3">
+                  <div className="icon-circle bg-warning">
+                    <i className="fas fa-exclamation-triangle text-white" />
+                  </div>
+                </div>
+                <div>
+                  <div className="small text-gray-500">December 2, 2019</div>
+                  Spending Alert: We've noticed unusually high spending for your account.
+                </div>
+              </a>
+              <a className="dropdown-item text-center small text-gray-500" href="/#">Show All Alerts</a>
+            </div>
+          </li>
+          {/* Nav Item - Messages */}
+          <li className={"nav-item dropdown no-arrow mx-1"+(isMesShow?" show":"")}>
+            <a className="nav-link dropdown-toggle" id="messagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded={isMesShow?"true":"false"} onClick={()=>setIsMesShow(!isMesShow)}>
+              <i className="fas fa-envelope fa-fw" />
+              {/* Counter - Messages */}
+              <span className="badge badge-danger badge-counter">7</span>
+            </a>
+            {/* Dropdown - Messages */}
+            <div className={"dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"+(isMesShow?" show":"")} aria-labelledby="messagesDropdown">
+              <h6 className="dropdown-header">
+                Message Center
+              </h6>
+              <a className="dropdown-item d-flex align-items-center" href="/#">
+                <div className="dropdown-list-image mr-3">
+                  <img className="rounded-circle" src="img/undraw_profile_1.svg" alt="..." />
+                  <div className="status-indicator bg-success" />
+                </div>
+                <div className="font-weight-bold">
+                  <div className="text-truncate">Hi there! I am wondering if you can help me with a
+                    problem I've been having.</div>
+                  <div className="small text-gray-500">Emily Fowler · 58m</div>
+                </div>
+              </a>
+              <a className="dropdown-item d-flex align-items-center" href="/#">
+                <div className="dropdown-list-image mr-3">
+                  <img className="rounded-circle" src="img/undraw_profile_2.svg" alt="..." />
+                  <div className="status-indicator" />
+                </div>
+                <div>
+                  <div className="text-truncate">I have the photos that you ordered last month, how
+                    would you like them sent to you?</div>
+                  <div className="small text-gray-500">Jae Chun · 1d</div>
+                </div>
+              </a>
+              <a className="dropdown-item d-flex align-items-center" href="/#">
+                <div className="dropdown-list-image mr-3">
+                  <img className="rounded-circle" src="img/undraw_profile_3.svg" alt="..." />
+                  <div className="status-indicator bg-warning" />
+                </div>
+                <div>
+                  <div className="text-truncate">Last month's report looks great, I am very happy with
+                    the progress so far, keep up the good work!</div>
+                  <div className="small text-gray-500">Morgan Alvarez · 2d</div>
+                </div>
+              </a>
+              <a className="dropdown-item d-flex align-items-center" href="/#">
+                <div className="dropdown-list-image mr-3">
+                  <img className="rounded-circle" src="https://source.unsplash.com/Mv9hjnEUHR4/60x60" alt="..." />
+                  <div className="status-indicator bg-success" />
+                </div>
+                <div>
+                  <div className="text-truncate">Am I a good boy? The reason I ask is because someone
+                    told me that people say this to all dogs, even if they aren't good...</div>
+                  <div className="small text-gray-500">Chicken the Dog · 2w</div>
+                </div>
+              </a>
+              <a className="dropdown-item text-center small text-gray-500" href="/#">Read More Messages</a>
+            </div>
+          </li>
+          <div className="topbar-divider d-none d-sm-block" />
+          {/* Nav Item - User Information */}
+          <li className={"nav-item dropdown no-arrow"+(isOptShow?" show":"")}>
+            <a className="nav-link dropdown-toggle" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded={(isOptShow?"true":"false")}  onClick={()=>setIsOptShow(!isOptShow)}>
+              <span className="mr-2 d-lg-inline text-gray-600 small font-weight-bold">{user?(user.first_name+" "+user.last_name):"a"}</span>
+              <img className="img-profile rounded-circle" src={user?(user.avatar):undefined} alt=''/>
+            </a>
+            {/* Dropdown - User Information */}
+            <div className={"dropdown-menu dropdown-menu-right shadow animated--grow-in"+(isOptShow?" show":"")} aria-labelledby="userDropdown">
+              <a className="dropdown-item" href="/#">
+                <i className="fas fa-user fa-sm fa-fw mr-2 text-gray-400" />
+                Profile
+              </a>
+              <a className="dropdown-item" href="/#">
+                <i className="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400" />
+                Settings
+              </a>
+              <a className="dropdown-item" href="/#">
+                <i className="fas fa-list fa-sm fa-fw mr-2 text-gray-400" />
+                Activity Log
+              </a>
+              <div className="dropdown-divider" />
+              <a className="dropdown-item" href="/#" data-toggle="modal" data-target="#logoutModal" onClick={()=>dispatch(logout() as any)}>
+                <i className="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400" />
+                Logout
+              </a>
+            </div>
+          </li>
+        </ul>
+      </nav>
+  )
+}
