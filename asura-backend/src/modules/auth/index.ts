@@ -1,4 +1,7 @@
-import { DataStoredInToken, TokenData } from "./auth.interface";
+import {
+  DataStoredInToken,
+  TokenData,
+} from "../../core/interfaces/auth.interface";
 import AuthRoute from "./auth.route";
 import AuthService from "./auth.service";
 import AuthController from "./auth.controller";

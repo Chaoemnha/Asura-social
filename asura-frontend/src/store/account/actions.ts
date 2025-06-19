@@ -30,6 +30,7 @@ export const login = (
 
     try {
       const response = await userService.login(email, password);
+      console.log(response);
       dispatch({
         type: LOGIN_SUCCESS,
         payload: response,

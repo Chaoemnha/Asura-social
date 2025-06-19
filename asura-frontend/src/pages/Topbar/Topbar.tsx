@@ -58,7 +58,7 @@ export const Topbar = () => {
           </li>
           {/* Nav Item - Alerts */}
           <li className="nav-item dropdown no-arrow mx-1">
-            <a className={"nav-link dropdown-toggle"+(isAlertShow?" show":"")} id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded={isAlertShow?"true":"false"} onClick={()=>setIsAlertShow(!isAlertShow)}>
+            <a href='/' className={"nav-link dropdown-toggle"+(isAlertShow?" show":"")} id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded={isAlertShow?"true":"false"} onClick={(e)=>{e.preventDefault();setIsAlertShow(!isAlertShow)}}>
               <i className="fas fa-bell fa-fw" />
               {/* Counter - Alerts */}
               <span className="badge badge-danger badge-counter">3+</span>
@@ -106,7 +106,7 @@ export const Topbar = () => {
           </li>
           {/* Nav Item - Messages */}
           <li className={"nav-item dropdown no-arrow mx-1"+(isMesShow?" show":"")}>
-            <a className="nav-link dropdown-toggle" id="messagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded={isMesShow?"true":"false"} onClick={()=>setIsMesShow(!isMesShow)}>
+            <a href='/' className="nav-link dropdown-toggle" id="messagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded={isMesShow?"true":"false"} onClick={(e)=>{e.preventDefault();setIsMesShow(!isMesShow)}}>
               <i className="fas fa-envelope fa-fw" />
               {/* Counter - Messages */}
               <span className="badge badge-danger badge-counter">7</span>
@@ -166,7 +166,7 @@ export const Topbar = () => {
           <div className="topbar-divider d-none d-sm-block" />
           {/* Nav Item - User Information */}
           <li className={"nav-item dropdown no-arrow"+(isOptShow?" show":"")}>
-            <a className="nav-link dropdown-toggle" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded={(isOptShow?"true":"false")}  onClick={()=>setIsOptShow(!isOptShow)}>
+            <a href='/' className="nav-link dropdown-toggle" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded={(isOptShow?"true":"false")}  onClick={(e)=>{e.preventDefault();setIsOptShow(!isOptShow)}}>
               <span className="mr-2 d-lg-inline text-gray-600 small font-weight-bold">{user?(user.first_name+" "+user.last_name):"a"}</span>
               <img className="img-profile rounded-circle" src={user?(user.avatar):undefined} alt=''/>
             </a>
