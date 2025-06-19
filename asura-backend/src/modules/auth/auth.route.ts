@@ -16,6 +16,15 @@ export default class AuthRoute implements Route {
       this.path,
       authMiddleware,
       this.authController.getCurrentUserLogin
-    ); //POST: http://localhost:5000/api/auth
+    ); //GET: http://localhost:5000/api/auth+x-auth-token
+    this.router.post(
+      this.path + "/refresh-token",
+      this.authController.refreshToken
+    );
+    this.router.post(
+      this.path + "/revoke-token",
+      authMiddleware,
+      this.authController.revokeToken
+    );
   }
 }

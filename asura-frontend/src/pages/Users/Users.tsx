@@ -26,7 +26,6 @@ export const Users = () => {
 
   const onPageChanged = (pageNumber: number)=>{
     setCurrentPage(pageNumber);
-    const searchKeyword: string = sessionStorage.getItem('searchKeyword')??"";
   }
   const handleSelectedRow = (id: string)=>{
     let newSelectedItems = [...selectedItems];
@@ -73,10 +72,10 @@ export const Users = () => {
   {/* DataTales Example */}
   <div className="card shadow mb-4">
     <div className="card-header py-3 d-flex justify-content-between align-items-center">
-      <h6 className="m-0 font-weight-bold text-primary">{(sessionStorage.getItem('searchKeyword') && sessionStorage.getItem('searchKeyword') != "")
+      <h6 className="m-0 font-weight-bold text-primary">{(sessionStorage.getItem('searchKeyword') && sessionStorage.getItem('searchKeyword') !== "")
       ? `Search results for: ${sessionStorage.getItem('searchKeyword')}`:"User list"
       }
-    {(sessionStorage.getItem('searchKeyword') && sessionStorage.getItem('searchKeyword') != "") && (
+    {(sessionStorage.getItem('searchKeyword') && sessionStorage.getItem('searchKeyword') !== "") && (
       <button
         className="btn btn-sm btn-secondary ml-3"
         onClick={() => {dispatch(loadUsersPaging(1) as any); sessionStorage.removeItem('searchKeyword')}}

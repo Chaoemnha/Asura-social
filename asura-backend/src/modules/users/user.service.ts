@@ -8,6 +8,8 @@ import bcryptjs from "bcryptjs";
 import IUser from "./user.interface";
 import jwt from "jsonwebtoken";
 import { IPagination } from "@core/interfaces";
+import { generateJwtToken, randomTokenString } from "@core/utils/helpers";
+import { RefreshTokenSchema } from "@modules/refresh_token";
 class UserService {
   public userSchema = UserSchema;
   public async createUser(model: RegisterDto): Promise<TokenData> {
@@ -34,7 +36,9 @@ class UserService {
       avatar: avatar,
       date: Date.now(),
     });
-    return this.createToken(createdUser); //Sau cung thi return token
+    const refreshToken = await this.generateRefreshToken(createdUser._id);
+    await refreshToken.save();
+    return generateJwtToken(createdUser._id, refreshToken.token); //Sau cung thi return token
   }
   public async updateUser(userId: string, model: RegisterDto): Promise<IUser> {
     if (isEmptyObject(model)) {
@@ -110,6 +114,7 @@ class UserService {
     const expriesIn: number = 3600;
     return {
       token: jwt.sign(dataInToken, secret, { expiresIn: expriesIn }), //Den day phai bam, => add jsonwebtoken de no bam ra jwt token
+      refreshToken: "",
     };
   }
 
@@ -165,6 +170,14 @@ class UserService {
     if (!result.acknowledged)
       throw new HttpException(409, "Your id is invalid");
     return result.deletedCount;
+  }
+  private async generateRefreshToken(userId: string) {
+    //Tao RT het han 7 ngay
+    return new RefreshTokenSchema({
+      user: userId,
+      token: randomTokenString(),
+      expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+    });
   }
 }
 

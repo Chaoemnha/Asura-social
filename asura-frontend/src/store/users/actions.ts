@@ -1,4 +1,4 @@
-import { AnyAction, Dispatch, UnknownAction } from "redux";
+import { Dispatch, UnknownAction } from "redux";
 import {
   ADD_USER_FAILURE,
   ADD_USER_REQUEST,

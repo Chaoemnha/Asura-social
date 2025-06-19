@@ -8,12 +8,16 @@ import {
   LOGIN_FAILURE,
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
+  REFRESH_TOKEN_FAILURE,
+  REFRESH_TOKEN_REQUEST,
+  REFRESH_TOKEN_SUCCESS,
 } from "./types";
 const initialState: AccountState = {
   user: null,
   loading: false,
   error: null,
   token: null,
+  refreshToken: null,
 };
 
 export const accountReducer = (
@@ -28,6 +32,8 @@ export const accountReducer = (
       return {
         ...state,
         loading: false,
+        token: null,
+        refreshToken: null,
         error: action.payload.error,
       };
     }
@@ -36,6 +42,7 @@ export const accountReducer = (
         ...state,
         loading: false,
         token: action.payload.token,
+        refreshToken: action.payload.refreshToken,
       };
     }
     case LOG_OUT: {
@@ -47,20 +54,13 @@ export const accountReducer = (
       };
     }
     case LOAD_CURRENT_LOGIN_USER_REQUEST: {
-      return { ...state, user: null, loading: true };
+      return { ...state, loading: true };
     }
     case LOAD_CURRENT_LOGIN_USER_SUCCESS: {
       return {
-        user: action.payload.user ?? {
-          _id: "",
-          first_name: "",
-          last_name: "",
-          email: "",
-          avatar: "",
-        },
+        ...state,
+        user: action.payload.user,
         loading: false,
-        error: null,
-        token: state.token,
       };
     }
     case LOAD_CURRENT_LOGIN_USER_FAILURE: {
@@ -70,8 +70,29 @@ export const accountReducer = (
         error: action.payload.error,
       };
     }
+    case REFRESH_TOKEN_FAILURE: {
+      return {
+        ...state,
+        loading: false,
+        error: action.payload.error,
+      };
+    }
+    case REFRESH_TOKEN_REQUEST: {
+      return {
+        ...state,
+        loading: true,
+      };
+    }
+    case REFRESH_TOKEN_SUCCESS: {
+      return {
+        ...state,
+        loading: false,
+        token: action.payload.token,
+        refreshToken: action.payload.refreshToken,
+      };
+    }
     default: {
-      return state; //Store se tu hung cai return (su thay doi)
+      return state;
     }
   }
 };
