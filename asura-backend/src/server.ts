@@ -6,6 +6,7 @@ import { validateEnv } from "@core/utils/index";
 import UsersRoute from "@modules/users/user.route";
 import AuthRoute from "@modules/auth/auth.route";
 import ProfileRoute from "@modules/profile/profile.route";
+import PostsRoute from "@modules/posts/posts.route";
 
 validateEnv();
 //Chung ta se lien ket cac module lai trong file chinh nay
@@ -14,6 +15,7 @@ const routes = [
   new UsersRoute(),
   new AuthRoute(),
   new ProfileRoute(),
+  new PostsRoute(),
 ];
 const app = new App(routes);
 app.listen(); //Chay ham listen de bat dau server
