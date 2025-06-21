@@ -18,12 +18,19 @@ const PostSchema = new mongoose.Schema({
   },
   likes: [
     {
+      user: String,
+    },
+  ],
+  comments: [
+    {
+      _id: {
+        type: String,
+      },
       user: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
       },
       text: {
         type: String,
-        required: true,
       },
       name: {
         type: String,

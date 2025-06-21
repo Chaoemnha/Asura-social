@@ -1,9 +1,11 @@
 import { UserSchema } from "@modules/users";
 import CreatePostDto from "./dtos/create_post.dto";
-import { IPost } from "./posts.interface";
+import { IComment, ILike, IPost } from "./posts.interface";
 import { HttpException } from "@core/exceptions";
 import { PostSchema } from ".";
 import { IPagination } from "@core/interfaces";
+import createCommentDto from "./dtos/create_comment_dto";
+import mongoose from "mongoose";
 
 export default class PostService {
   public async createPost(
@@ -17,6 +19,8 @@ export default class PostService {
       name: user.first_name + " " + user.last_name,
       avatar: user.avatar,
       user: userId,
+      likes: [],
+      comments: [],
     });
     const post = await newPost.save();
     return post;
@@ -87,5 +91,70 @@ export default class PostService {
       throw new HttpException(400, "User is not authorized");
     await PostSchema.findByIdAndDelete(postId);
     return post;
+  }
+
+  public async likePost(userId: string, postId: string): Promise<ILike[]> {
+    const post = await PostSchema.findById(postId).exec();
+    if (!post) throw new HttpException(400, "Post is not found");
+
+    if (post.likes.some((like: ILike) => like.user.toString() === userId)) {
+      throw new HttpException(400, "Post already liked");
+    }
+    post.likes.unshift({ user: userId });
+    await post.save();
+    return post.likes;
+  }
+
+  public async unLikePost(userId: string, postId: string): Promise<ILike[]> {
+    const post = await PostSchema.findById(postId).exec();
+    if (!post) throw new HttpException(400, "Post is not found");
+    //Kiem tra xem co bat ki dieu kien phan tu mang nao true (co roi) hay khong
+    if (!post.likes.some((like: ILike) => like.user.toString() === userId)) {
+      throw new HttpException(400, "You havent liked this post yet");
+    }
+    post.likes = post.likes.filter(({ user }) => user.toString() !== userId);
+    await post.save();
+    return post.likes;
+  }
+
+  public async addComment(comment: createCommentDto): Promise<IComment[]> {
+    const post = await PostSchema.findById(comment.postId).exec();
+    if (!post) throw new HttpException(400, "Post not found");
+    const user = await UserSchema.findById(comment.userId)
+      .select("-password")
+      .exec();
+    if (!user) throw new HttpException(400, "User is not found");
+    const newComment = {
+      _id: new mongoose.Types.ObjectId().toString(),
+      user: comment.userId,
+      text: comment.text,
+      name: user.first_name + " " + user.last_name,
+      avatar: user.avatar,
+      date: new Date(Date.now()),
+    };
+    console.log("newComment", newComment);
+    console.log("post", post);
+    post.comments.unshift(newComment as IComment);
+    await post.save();
+    return post.comments;
+  }
+
+  public async removeComment(
+    commentId: string,
+    postId: string,
+    userId: string
+  ): Promise<IComment[]> {
+    const post = await PostSchema.findById(postId).exec();
+    if (!post) throw new HttpException(400, "Post not found");
+
+    const comment = post.comments.find((x) => x._id === commentId);
+    if (!comment) throw new HttpException(400, "Comment is not foung");
+    console.log("comment.user", typeof comment.user, comment.user);
+    console.log("userId", userId);
+    if (comment.user !== userId)
+      throw new HttpException(401, "User is not authorized");
+    post.comments = post.comments.filter(({ _id }) => _id !== commentId);
+    await post.save();
+    return post.comments;
   }
 }

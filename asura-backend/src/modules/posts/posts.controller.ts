@@ -96,4 +96,70 @@ export default class PostsController {
       next(error);
     }
   };
+
+  public likePost = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const postId = req.params.id;
+      const likes = await this.postService.likePost(res.locals.user.id, postId);
+      res.status(200).json(likes);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public unlikePost = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const postId = req.params.id;
+      const likes = await this.postService.unLikePost(
+        res.locals.user.id,
+        postId
+      );
+      res.status(200).json(likes);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public addComment = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const postId = req.params.postid;
+      const result = await this.postService.addComment({
+        text: req.body.text,
+        userId: res.locals.user.id,
+        postId: postId,
+      });
+      res.status(200).json(result);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public removeComment = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const postId = req.params.postid;
+      const commentId = req.params.commentid;
+      console.log("postId", postId);
+      console.log("commentId", commentId);
+      const result = await this.postService.removeComment(
+        commentId,
+        postId,
+        res.locals.user.id
+      );
+      res.status(200).json(result);
+    } catch (error) {
+      next(error);
+    }
+  };
 }
