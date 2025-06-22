@@ -92,18 +92,6 @@ class ProfileService {
     userId: string,
     experience: AddExperienceDto
   ) => {
-    // const { title, company, location, from, to, current, description } =
-    //   experience;
-    // const newExp = {
-    //   title,
-    //   company,
-    //   location,
-    //   from,
-    //   to,
-    //   current,
-    //   description,
-    // };
-    //Tuong doi voi
     const newExp = {
       ...experience,
     };
