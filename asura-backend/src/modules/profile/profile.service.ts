@@ -2,6 +2,7 @@ import { IUser, UserSchema } from "@modules/users";
 import {
   IEducation,
   IExperience,
+  IFollower,
   IProfile,
   ISocial,
 } from "./profile.interface";
@@ -98,7 +99,7 @@ class ProfileService {
 
     const profile = await ProfileSchema.findOne({ user: userId }).exec();
     if (!profile) {
-      throw new HttpException(400, "There is not profile for this user");
+      throw new HttpException(400, "There is no profile for this user");
     }
     //Add moi 1 ban ghi vao dau mang
     profile.experience.unshift(newExp as IExperience);
@@ -111,7 +112,7 @@ class ProfileService {
     const profile = await ProfileSchema.findOne({ user: userId }).exec();
 
     if (!profile) {
-      throw new HttpException(400, "There is not profile for this user");
+      throw new HttpException(400, "There is no profile for this user");
     }
 
     profile.experience = profile.experience.filter(
@@ -120,6 +121,7 @@ class ProfileService {
     await profile.save();
     return profile;
   }; //B31.10 sang controll add ctrl
+
   public addEducation = async (userId: string, education: AddEducationDto) => {
     const newEdu = {
       ...education,
@@ -127,20 +129,88 @@ class ProfileService {
 
     const profile = await ProfileSchema.findOne({ user: userId }).exec();
     if (!profile) {
-      throw new HttpException(400, "There is not profile for this user");
+      throw new HttpException(400, "There is no profile for this user");
     }
-    //Add moi 1 ban ghi vao dau mang
+
     profile.education.unshift(newEdu as IEducation);
     await profile.save();
 
     return profile;
   };
 
+  public follow = async (fromUserId: string, toUserId: string) => {
+    if (fromUserId === toUserId) {
+      throw new HttpException(400, "You cannot unfollow yourself");
+    }
+    const fromProfile = await ProfileSchema.findOne({
+      user: fromUserId,
+    }).exec();
+    if (!fromProfile) {
+      throw new HttpException(400, "There is no profile for this user");
+    }
+    console.log("fromProfile.followings", fromProfile.followings);
+    if (
+      fromProfile.followings &&
+      fromProfile.followings.some(
+        (follower: IFollower) => follower.user.toString() === toUserId
+      )
+    )
+      throw new HttpException(400, "You has been already followed this user");
+
+    const toProfile = await ProfileSchema.findOne({ user: toUserId }).exec();
+    if (!toProfile) {
+      throw new HttpException(400, "There is no profile for this user");
+    }
+    fromProfile.followings.unshift({ user: toUserId });
+    toProfile.followers.unshift({ user: fromUserId });
+    //await fromProfile.save();
+    //await toProfile.save();
+    await Promise.all([fromProfile.save(), toProfile.save()]);
+    //khong return ca 2 duoc, trong ham nay thi fromProfile dang xu ly
+    return toProfile;
+  };
+
+  public unFollow = async (fromUserId: string, toUserId: string) => {
+    if (fromUserId === toUserId) {
+      throw new HttpException(400, "You cannot unfollow yourself");
+    }
+    const fromProfile = await ProfileSchema.findOne({
+      user: fromUserId,
+    }).exec();
+    if (!fromProfile) {
+      throw new HttpException(400, "There is no profile for this user");
+    }
+    console.log("fromProfile.followings", fromProfile.followings);
+    if (
+      !fromProfile.followings ||
+      !fromProfile.followings.some(
+        (follower: IFollower) => follower.user.toString() == toUserId
+      )
+    )
+      throw new HttpException(400, "You has not followed this user yet");
+
+    const toProfile = await ProfileSchema.findOne({ user: toUserId }).exec();
+    if (!toProfile) {
+      throw new HttpException(400, "There is no profile for this user");
+    }
+    fromProfile.followings = fromProfile.followings.filter(
+      ({ user }) => user.toString() !== toUserId
+    );
+    toProfile.followers = toProfile.followers.filter(
+      ({ user }) => user.toString() !== fromUserId
+    );
+    //await fromProfile.save();
+    //await toProfile.save();
+    await Promise.all([fromProfile.save(), toProfile.save()]);
+    //khong return ca 2 duoc, trong ham nay thi fromProfile dang xu ly
+    return toProfile;
+  };
+
   public deleteEducation = async (userId: string, educationId: string) => {
     const profile = await ProfileSchema.findOne({ user: userId }).exec();
 
     if (!profile) {
-      throw new HttpException(400, "There is not profile for this user");
+      throw new HttpException(400, "There is no profile for this user");
     }
 
     profile.education = profile.education.filter(

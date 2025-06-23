@@ -145,5 +145,30 @@ class ProfileController {
       next(error);
     }
   }; //Xong sang route add duong dan create & delete
+  public follow = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      //const fromUserId = req.params.fromid; follow thì xuất phát từ mình => user là fromUser
+      const fromUserId = res.locals.user.id;
+      const toUserId = req.params.id;
+      const resultObj = await this.profileService.follow(fromUserId, toUserId);
+      res.status(200).json(resultObj);
+    } catch (error) {
+      next(error);
+    }
+  };
+  public unfollow = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      //const fromUserId = req.params.fromid; follow thì xuất phát từ mình => user là fromUser
+      const fromUserId = res.locals.user.id;
+      const toUserId = req.params.id;
+      const resultObj = await this.profileService.unFollow(
+        fromUserId,
+        toUserId
+      );
+      res.status(200).json(resultObj);
+    } catch (error) {
+      next(error);
+    }
+  };
 }
 export default ProfileController;

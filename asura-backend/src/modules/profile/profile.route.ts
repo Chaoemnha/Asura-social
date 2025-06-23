@@ -8,7 +8,7 @@ import AddExperienceDto from "./dtos/add_experience.dto";
 import AddEducationDto from "./dtos/add_education.dto";
 
 export default class ProfileRoute implements Route {
-  public path = "/api/v1/profile";
+  public path = "/api/profile";
   public router = Router();
   public profileController = new ProfileController();
 
@@ -59,6 +59,16 @@ export default class ProfileRoute implements Route {
       `${this.path}/education/:edu_id`,
       authMiddleware,
       this.profileController.deleteEducation
+    );
+    this.router.put(
+      `${this.path}/follow/:id`,
+      authMiddleware,
+      this.profileController.follow
+    );
+    this.router.delete(
+      `${this.path}/follow/:id`,
+      authMiddleware,
+      this.profileController.unfollow
     );
   }
 }
