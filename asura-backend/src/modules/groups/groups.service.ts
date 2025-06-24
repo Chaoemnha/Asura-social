@@ -2,7 +2,7 @@ import { HttpException } from "@core/exceptions";
 import { GroupSchema } from ".";
 import CreateGroupDto from "./dtos/create_group_dto";
 import { IGroup, IManager, IMember } from "./groups.interface";
-import { UserSchema } from "@modules/users";
+import { IUser, UserSchema } from "@modules/users";
 import SetManagerDto from "./dtos/set_manager_dto";
 
 export default class GroupService {
@@ -48,6 +48,16 @@ export default class GroupService {
   public async getAllGroup(): Promise<IGroup[]> {
     const groups = GroupSchema.find().exec();
     return groups;
+  }
+
+  public async getAllMember(groupId: string): Promise<IUser[]> {
+    const groups = await GroupSchema.findById(groupId).exec();
+    if (!groups) throw new HttpException(400, "Group id is not exists");
+    const userIds = await groups.members.map((member) => {
+      return member.user;
+    });
+    const users = UserSchema.find({ _id: userIds }).select("-password").exec();
+    return users;
   }
 
   public async deleteGroup(groupId: string): Promise<IGroup> {

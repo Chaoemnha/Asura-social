@@ -51,5 +51,9 @@ export default class GroupRoute implements Route {
       this.groupsController.deleteGroup
     );
     this.router.get(this.path, this.groupsController.getAll);
+    this.router.get(
+      this.path + "/members/:id",
+      this.groupsController.getAllMembers
+    );
   }
 }
