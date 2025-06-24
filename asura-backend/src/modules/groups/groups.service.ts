@@ -1,7 +1,7 @@
 import { HttpException } from "@core/exceptions";
 import { GroupSchema } from ".";
 import CreateGroupDto from "./dtos/create_group_dto";
-import { IGroup } from "./groups.interface";
+import { IGroup, IMember } from "./groups.interface";
 import { UserSchema } from "@modules/users";
 
 export default class GroupService {
@@ -58,5 +58,60 @@ export default class GroupService {
     }).exec();
     if (!deleteGroup) throw new HttpException(400, "Delete is not success");
     return deleteGroup;
+  }
+  public async joinGroup(groupId: string, userId: string): Promise<IGroup> {
+    const group = await GroupSchema.findById(groupId).exec();
+    if (!group) throw new HttpException(400, "Group is not exists");
+    const user = await UserSchema.findById(userId).select("-password").exec();
+    if (!user) throw new HttpException(400, "User is not exists");
+    //check da join
+    const hasReq = group.member_requests.some(
+      (mem) => mem.user.toString() === userId
+    );
+    if (hasReq)
+      throw new HttpException(
+        400,
+        "You has already sent join request to this group"
+      );
+    const hasJoined = group.members.some(
+      (mem) => mem.user.toString() === userId
+    );
+    if (hasJoined)
+      throw new HttpException(400, "You r already been a member of this group");
+    //set lai group
+    group.member_requests.unshift({ user: userId } as IMember);
+    await group.save();
+    return group;
+  }
+  public async acceptJoin(groupId: string, userId: string): Promise<IGroup> {
+    const group = await GroupSchema.findById(groupId).exec();
+    if (!group) throw new HttpException(400, "Group is not exists");
+    const user = await UserSchema.findById(userId).select("-password").exec();
+    if (!user) throw new HttpException(400, "User is not exists");
+    //check da join
+    const hasReq = group.member_requests.some(
+      (mem) => mem.user.toString() == userId
+    );
+    if (!hasReq)
+      throw new HttpException(
+        400,
+        "There is not any join request of this user"
+      );
+    const hasJoined = group.members.some(
+      (mem) => mem.user.toString() == userId
+    );
+    if (hasJoined)
+      throw new HttpException(
+        400,
+        "This user is already been member of this group"
+      );
+    //set lai group
+    group.member_requests = group.member_requests.filter(({ user }) => {
+      user.toString() !== userId;
+      console.log(user.toString(), userId);
+    });
+    group.members.unshift({ user: userId } as IMember);
+    await group.save();
+    return group;
   }
 }

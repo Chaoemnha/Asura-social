@@ -48,6 +48,34 @@ export default class GroupController {
       next(error);
     }
   };
+  public joinGroup = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const userId = res.locals.user.id;
+      const groupId = req.params.id;
+      const result = await this.groupService.joinGroup(groupId, userId); //Ở đây tokenData sẽ có kiểu TokenData nhưng ta ép kiểu thế kia nhìn nó tường minh hơn thôi
+      res.status(200).json(result);
+    } catch (error) {
+      next(error);
+    }
+  };
+  public acceptJoin = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const userId = req.params.userid;
+      const groupId = req.params.id;
+      const result = await this.groupService.acceptJoin(groupId, userId); //Ở đây tokenData sẽ có kiểu TokenData nhưng ta ép kiểu thế kia nhìn nó tường minh hơn thôi
+      res.status(200).json(result);
+    } catch (error) {
+      next(error);
+    }
+  };
   public getAll = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const groups = await this.groupService.getAllGroup();
