@@ -19,6 +19,17 @@ export default class GroupRoute implements Route {
       validatorMiddleware(CreateGroupDto, true),
       this.groupsController.createGroup
     );
+    this.router.put(
+      this.path + "/:id",
+      authMiddleware,
+      validatorMiddleware(CreateGroupDto, true),
+      this.groupsController.updateGroup
+    );
+    this.router.delete(
+      this.path + "/:id",
+      authMiddleware,
+      this.groupsController.deleteGroup
+    );
     this.router.get(this.path, this.groupsController.getAll);
   }
 }
