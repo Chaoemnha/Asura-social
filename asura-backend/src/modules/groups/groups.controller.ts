@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { TokenData } from "@modules/auth";
 import GroupService from "./groups.service";
 import CreateGroupDto from "./dtos/create_group_dto";
+import SetManagerDto from "./dtos/set_manager_dto";
 export default class GroupController {
   private groupService = new GroupService();
 
@@ -71,6 +72,34 @@ export default class GroupController {
       const userId = req.params.userid;
       const groupId = req.params.id;
       const result = await this.groupService.acceptJoin(groupId, userId); //Ở đây tokenData sẽ có kiểu TokenData nhưng ta ép kiểu thế kia nhìn nó tường minh hơn thôi
+      res.status(200).json(result);
+    } catch (error) {
+      next(error);
+    }
+  };
+  public addManager = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const groupId = req.params.id;
+      const model: SetManagerDto = req.body;
+      const result = await this.groupService.addManager(groupId, model); //Ở đây tokenData sẽ có kiểu TokenData nhưng ta ép kiểu thế kia nhìn nó tường minh hơn thôi
+      res.status(200).json(result);
+    } catch (error) {
+      next(error);
+    }
+  };
+  public removeManager = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const groupId = req.params.id;
+      const userId = req.params.userid;
+      const result = await this.groupService.removeManager(groupId, userId); //Ở đây tokenData sẽ có kiểu TokenData nhưng ta ép kiểu thế kia nhìn nó tường minh hơn thôi
       res.status(200).json(result);
     } catch (error) {
       next(error);
