@@ -3,6 +3,7 @@ import {
   IEducation,
   IExperience,
   IFollower,
+  IFriend,
   IProfile,
   ISocial,
 } from "./profile.interface";
@@ -140,7 +141,7 @@ class ProfileService {
 
   public follow = async (fromUserId: string, toUserId: string) => {
     if (fromUserId === toUserId) {
-      throw new HttpException(400, "You cannot unfollow yourself");
+      throw new HttpException(400, "You cannot follow yourself");
     }
     const fromProfile = await ProfileSchema.findOne({
       user: fromUserId,
@@ -178,9 +179,8 @@ class ProfileService {
       user: fromUserId,
     }).exec();
     if (!fromProfile) {
-      throw new HttpException(400, "There is no profile for this user");
+      throw new HttpException(400, "There is no profile for you");
     }
-    console.log("fromProfile.followings", fromProfile.followings);
     if (
       !fromProfile.followings ||
       !fromProfile.followings.some(
@@ -204,6 +204,165 @@ class ProfileService {
     await Promise.all([fromProfile.save(), toProfile.save()]);
     //khong return ca 2 duoc, trong ham nay thi fromProfile dang xu ly
     return toProfile;
+  };
+
+  public friendRequest = async (fromUserId: string, toUserId: string) => {
+    if (fromUserId === toUserId) {
+      throw new HttpException(
+        400,
+        "You cannot send friend request to yourself"
+      );
+    }
+    const fromProfile = await ProfileSchema.findOne({
+      user: fromUserId,
+    }).exec();
+    if (!fromProfile) {
+      throw new HttpException(400, "There is no profile for you");
+    }
+    console.log("fromProfile.friend_request", fromProfile.friend_request);
+    if (
+      fromProfile.friend_request &&
+      fromProfile.friend_request.some(
+        (request: IFriend) => request.user.toString() === toUserId
+      )
+    )
+      throw new HttpException(
+        400,
+        "You has been already send friend request to this user"
+      );
+
+    const toProfile = await ProfileSchema.findOne({ user: toUserId }).exec();
+    if (!toProfile) {
+      throw new HttpException(400, "There is no profile for this user");
+    }
+    fromProfile.friend_request.unshift({
+      user: toUserId,
+      date: new Date(Date.now()),
+    });
+    //await fromProfile.save();
+    //await toProfile.save();
+    await fromProfile.save();
+    //khong return ca 2 duoc, trong ham nay thi fromProfile dang xu ly
+    return fromProfile;
+  };
+
+  public cancelFriendRequest = async (fromUserId: string, toUserId: string) => {
+    if (fromUserId === toUserId) {
+      throw new HttpException(
+        400,
+        "You cannot cancel friend request to yourself"
+      );
+    }
+    const fromProfile = await ProfileSchema.findOne({
+      user: fromUserId,
+    }).exec();
+    if (!fromProfile) {
+      throw new HttpException(400, "There is no profile for you");
+    }
+    if (
+      !fromProfile.friend_request ||
+      !fromProfile.friend_request.some(
+        (follower: IFollower) => follower.user.toString() === toUserId
+      )
+    )
+      throw new HttpException(
+        400,
+        "You has not sent friend request to this user yet"
+      );
+
+    const toProfile = await ProfileSchema.findOne({ user: toUserId }).exec();
+    if (!toProfile) {
+      throw new HttpException(400, "There is no profile for this user");
+    }
+    fromProfile.friend_request = fromProfile.friend_request.filter(
+      ({ user }) => user.toString() !== toUserId
+    );
+    //await fromProfile.save();
+    //await toProfile.save();
+    await fromProfile.save();
+    //khong return ca 2 duoc, trong ham nay thi fromProfile dang xu ly
+    return fromProfile;
+  };
+
+  public AddFriend = async (fromUserId: string, toUserId: string) => {
+    if (fromUserId === toUserId) {
+      throw new HttpException(400, "You cannot add friend to yourself");
+    }
+    const fromProfile = await ProfileSchema.findOne({
+      user: fromUserId,
+    }).exec();
+    if (!fromProfile) {
+      throw new HttpException(400, "There is no profile for you");
+    }
+    if (
+      fromProfile.friends &&
+      fromProfile.friends.some(
+        (friend: IFriend) => friend.user.toString() === toUserId
+      )
+    )
+      throw new HttpException(
+        400,
+        "You has already been friend with this user"
+      );
+
+    const toProfile = await ProfileSchema.findOne({ user: toUserId }).exec();
+    if (
+      (fromProfile !== null && !fromProfile.friend_request) ||
+      (fromProfile !== null &&
+        !fromProfile.friend_request.some(
+          (request: IFriend) => request.user.toString() === toUserId
+        ))
+    )
+      throw new HttpException(
+        400,
+        "You has not sent friend request to this user yet"
+      );
+
+    if (!toProfile) {
+      throw new HttpException(400, "There is no profile for this user");
+    }
+    fromProfile.friends.unshift({ user: toUserId, date: new Date(Date.now()) });
+    toProfile.friends.unshift({ user: fromUserId, date: new Date(Date.now()) });
+    fromProfile.friend_request = fromProfile.friend_request.filter(
+      ({ user }) => user.toString() !== toUserId
+    );
+    await fromProfile.save();
+    await toProfile.save();
+    return fromProfile;
+  };
+  public UnFriend = async (fromUserId: string, toUserId: string) => {
+    if (fromUserId === toUserId) {
+      throw new HttpException(400, "You cannot unfriend to yourself");
+    }
+    const fromProfile = await ProfileSchema.findOne({
+      user: fromUserId,
+    }).exec();
+    if (!fromProfile) {
+      throw new HttpException(400, "There is no profile for you");
+    }
+    if (
+      !fromProfile.friends ||
+      !fromProfile.friends.some(
+        (friend: IFriend) => friend.user.toString() === toUserId
+      )
+    )
+      throw new HttpException(
+        400,
+        "You has not been friend with this user yet"
+      );
+
+    const toProfile = await ProfileSchema.findOne({ user: toUserId }).exec();
+    if (!toProfile) {
+      throw new HttpException(400, "There is no profile for this user");
+    }
+    fromProfile.friends = fromProfile.friends.filter(
+      ({ user }) => user.toString() !== toUserId
+    );
+    toProfile.friends = fromProfile.friends.filter(
+      ({ user }) => user.toString() !== toUserId
+    );
+    await Promise.all([fromProfile.save(), toProfile.save()]);
+    return fromProfile;
   };
 
   public deleteEducation = async (userId: string, educationId: string) => {
