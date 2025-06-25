@@ -105,6 +105,20 @@ export default class GroupController {
       next(error);
     }
   };
+  public removeMember = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const groupId = req.params.id;
+      const userId = res.locals.user.id;
+      const result = await this.groupService.removeMember(groupId, userId); //Ở đây tokenData sẽ có kiểu TokenData nhưng ta ép kiểu thế kia nhìn nó tường minh hơn thôi
+      res.status(200).json(result);
+    } catch (error) {
+      next(error);
+    }
+  };
   public getAll = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const groups = await this.groupService.getAllGroup();

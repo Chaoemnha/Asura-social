@@ -171,4 +171,27 @@ export default class GroupService {
     await group.save();
     return group;
   }
+  public async removeMember(groupId: string, userId: string): Promise<IGroup> {
+    const group = await GroupSchema.findById(groupId).exec();
+    if (!group) throw new HttpException(400, "Group is not exists");
+    const user = await UserSchema.findById(userId).select("-password").exec();
+    if (!user) throw new HttpException(400, "User is not exists");
+    //check da join
+    //const hasReq = group.members.some((mem) => mem.user.toString() == userId);
+    //cx giong some nhung tra ve index neu bat ki phan tu nao dap ung dieu kien
+    const mem = group.members.findIndex((mem) => mem.user === userId) == -1;
+    if (mem)
+      throw new HttpException(400, "You r not been a member of this group yet");
+    if (group.members.length == 1)
+      throw new HttpException(
+        400,
+        "You r the last member of this group, if u want to continue, try delete group instead"
+      );
+    //set lai group
+    group.members = group.members.filter(
+      ({ user }) => user.toString() !== userId
+    );
+    await group.save();
+    return group;
+  }
 }
