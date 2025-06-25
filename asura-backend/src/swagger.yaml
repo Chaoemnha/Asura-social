@@ -1,0 +1,1189 @@
+swagger: '2.0'
+info:
+  description: 'Asura Social API docs [Ongoing]'
+  version: '1.0.0'
+  title: 'Asura Social Network API Manage'
+  termsOfService: 'http://asura.com.vn'
+  contact:
+    email: 'luannguyentm99@gmail.com'
+  license:
+    name: 'MIT'
+    url: 'https://opensource.org/licenses/MIT'
+host: 'localhost:5000'
+basePath: '/api'
+tags:
+- name: 'auth'
+  description: 'Authentication APIs'
+- name: 'users'
+  description: 'User Management APIs'
+- name: 'profile'
+  description: 'Profile Management APIs'
+- name: 'conversations'
+  description: 'Message APIs'
+- name: 'groups'
+  description: 'Group APIs'
+- name: 'posts'
+  description: 'Post APIs'
+schemes:
+- 'http'
+securityDefinitions:
+  ApiKeyAuth:
+    type: apiKey
+    in: header
+    name: x-auth-token
+paths:
+  /:
+    get:
+      tags:
+      - 'auth'
+      summary: 'API Health Check'
+      description: 'Check if API is running'
+      operationId: "apiCheck"
+      produces:
+      - 'application/json'
+      responses:
+        '200':
+          description: 'API is running successfully'
+        '500':
+          description: 'Server error'
+
+  /auth:
+    post:
+      tags:
+      - 'auth'
+      summary: 'Login API and get token'
+      description: 'Input email and password to authenticate user'
+      operationId: "login"
+      consumes:
+      - 'application/json'
+      produces:
+      - 'application/json'
+      parameters:
+      - in: 'body'
+        name: 'body'
+        description: 'Login credentials for user'
+        required: true
+        schema: 
+          $ref: '#/definitions/LoginDto'
+      responses:
+        '200':
+          description: 'Login successful'
+          schema:
+            $ref: '#/definitions/AuthResponse'
+        '400':
+          description: 'Invalid input'
+        '401':
+          description: 'Invalid credentials'
+    get:
+      tags:
+      - 'auth'
+      summary: 'Get current logged in user'
+      description: 'Get current user information using token'
+      operationId: "getCurrentUser"
+      produces:
+      - 'application/json'
+      security:
+      - ApiKeyAuth: []
+      responses:
+        '200':
+          description: 'User information retrieved successfully'
+          schema:
+            $ref: '#/definitions/User'
+        '401':
+          description: 'Unauthorized - Invalid token'
+
+  /users:
+    post:
+      tags:
+      - 'users'
+      summary: 'Register new user'
+      description: 'Create a new user account'
+      operationId: "registerUser"
+      consumes:
+      - 'application/json'
+      produces:
+      - 'application/json'
+      parameters:
+      - in: 'body'
+        name: 'body'
+        description: 'User registration data'
+        required: true
+        schema: 
+          $ref: '#/definitions/RegisterDto'
+      responses:
+        '201':
+          description: 'User created successfully'
+          schema:
+            $ref: '#/definitions/User'
+        '400':
+          description: 'Invalid input or user already exists'
+    get:
+      tags:
+      - 'users'
+      summary: 'Get all users'
+      description: 'Retrieve all users in the system'
+      operationId: "getAllUsers"
+      produces:
+      - 'application/json'
+      responses:
+        '200':
+          description: 'Users retrieved successfully'
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/User'
+
+  /users/{userId}:
+    get:
+      tags:
+      - 'users'
+      summary: 'Get user by ID'
+      description: 'Retrieve a specific user by their ID'
+      operationId: "getUserById"
+      produces:
+      - 'application/json'
+      parameters:
+      - name: 'userId'
+        in: 'path'
+        description: 'ID of user to retrieve'
+        required: true
+        type: 'string'
+      responses:
+        '200':
+          description: 'User retrieved successfully'
+          schema:
+            $ref: '#/definitions/User'
+        '404':
+          description: 'User not found'
+    put:
+      tags:
+      - 'users'
+      summary: 'Update user'
+      description: 'Update user information'
+      operationId: "updateUser"
+      consumes:
+      - 'application/json'
+      produces:
+      - 'application/json'
+      parameters:
+      - name: 'userId'
+        in: 'path'
+        description: 'ID of user to update'
+        required: true
+        type: 'string'
+      - in: 'body'
+        name: 'body'
+        description: 'User data to update'
+        required: true
+        schema: 
+          $ref: '#/definitions/UpdateUserDto'
+      responses:
+        '200':
+          description: 'User updated successfully'
+          schema:
+            $ref: '#/definitions/User'
+        '400':
+          description: 'Invalid input'
+        '404':
+          description: 'User not found'
+    delete:
+      tags:
+      - 'users'
+      summary: 'Delete user'
+      description: 'Delete a user account'
+      operationId: "deleteUser"
+      produces:
+      - 'application/json'
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: 'userId'
+        in: 'path'
+        description: 'ID of user to delete'
+        required: true
+        type: 'string'
+      responses:
+        '200':
+          description: 'User deleted successfully'
+        '401':
+          description: 'Unauthorized'
+        '404':
+          description: 'User not found'
+
+  /users/paging/{page}:
+    get:
+      tags:
+      - 'users'
+      summary: 'Get users with pagination'
+      description: 'Retrieve users with pagination and optional keyword search'
+      operationId: "getUsersPaging"
+      produces:
+      - 'application/json'
+      parameters:
+      - name: 'page'
+        in: 'path'
+        description: 'Page number for pagination'
+        required: true
+        type: 'integer'
+        minimum: 1
+      - name: 'keyword'
+        in: 'query'
+        description: 'Search keyword for filtering users'
+        required: false
+        type: 'string'
+      responses:
+        '200':
+          description: 'Users retrieved successfully'
+          schema:
+            $ref: '#/definitions/PaginatedUsers'
+
+  /v1/profile:
+    post:
+      tags:
+      - 'profile'
+      summary: 'Create user profile'
+      description: 'Create a detailed profile for the authenticated user'
+      operationId: "createProfile"
+      consumes:
+      - 'application/json'
+      produces:
+      - 'application/json'
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - in: 'body'
+        name: 'body'
+        description: 'Profile data'
+        required: true
+        schema: 
+          $ref: '#/definitions/CreateProfileDto'
+      responses:
+        '201':
+          description: 'Profile created successfully'
+          schema:
+            $ref: '#/definitions/Profile'
+        '400':
+          description: 'Invalid input'
+        '401':
+          description: 'Unauthorized'
+
+  /v1/profile/me:
+    get:
+      tags:
+      - 'profile'
+      summary: 'Get current user profile'
+      description: 'Retrieve the profile of the authenticated user'
+      operationId: "getCurrentProfile"
+      produces:
+      - 'application/json'
+      security:
+      - ApiKeyAuth: []
+      responses:
+        '200':
+          description: 'Profile retrieved successfully'
+          schema:
+            $ref: '#/definitions/Profile'
+        '401':
+          description: 'Unauthorized'
+        '404':
+          description: 'Profile not found'
+
+  /v1/profile:
+    get:
+      tags:
+      - 'profile'
+      summary: 'Get all profiles'
+      description: 'Retrieve all user profiles'
+      operationId: "getAllProfiles"
+      produces:
+      - 'application/json'
+      responses:
+        '200':
+          description: 'Profiles retrieved successfully'
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Profile'
+
+  /v1/profile/user/{userId}:
+    get:
+      tags:
+      - 'profile'
+      summary: 'Get profile by user ID'
+      description: 'Retrieve a specific user profile by user ID'
+      operationId: "getProfileByUserId"
+      produces:
+      - 'application/json'
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: 'userId'
+        in: 'path'
+        description: 'ID of user whose profile to retrieve'
+        required: true
+        type: 'string'
+      responses:
+        '200':
+          description: 'Profile retrieved successfully'
+          schema:
+            $ref: '#/definitions/Profile'
+        '401':
+          description: 'Unauthorized'
+        '404':
+          description: 'Profile not found'
+
+  /v1/profile/experience:
+    put:
+      tags:
+      - 'profile'
+      summary: 'Add experience to profile'
+      description: 'Add work experience to the authenticated user profile'
+      operationId: "addExperience"
+      consumes:
+      - 'application/json'
+      produces:
+      - 'application/json'
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - in: 'body'
+        name: 'body'
+        description: 'Experience data'
+        required: true
+        schema: 
+          $ref: '#/definitions/ExperienceDto'
+      responses:
+        '200':
+          description: 'Experience added successfully'
+          schema:
+            $ref: '#/definitions/Profile'
+        '400':
+          description: 'Invalid input'
+        '401':
+          description: 'Unauthorized'
+
+  /v1/profile/experience/{experienceId}:
+    delete:
+      tags:
+      - 'profile'
+      summary: 'Delete experience from profile'
+      description: 'Remove work experience from the authenticated user profile'
+      operationId: "deleteExperience"
+      produces:
+      - 'application/json'
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: 'experienceId'
+        in: 'path'
+        description: 'ID of experience to delete'
+        required: true
+        type: 'string'
+      responses:
+        '200':
+          description: 'Experience deleted successfully'
+          schema:
+            $ref: '#/definitions/Profile'
+        '401':
+          description: 'Unauthorized'
+        '404':
+          description: 'Experience not found'
+
+  /profile/education:
+    put:
+      tags:
+      - 'profile'
+      summary: 'Add education to profile'
+      description: 'Add education information to the authenticated user profile'
+      operationId: "addEducation"
+      consumes:
+      - 'application/json'
+      produces:
+      - 'application/json'
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - in: 'body'
+        name: 'body'
+        description: 'Education data'
+        required: true
+        schema: 
+          $ref: '#/definitions/EducationDto'
+      responses:
+        '200':
+          description: 'Education added successfully'
+          schema:
+            $ref: '#/definitions/Profile'
+        '400':
+          description: 'Invalid input'
+        '401':
+          description: 'Unauthorized'
+
+  /v1/profile/education/{educationId}:
+    delete:
+      tags:
+      - 'profile'
+      summary: 'Delete education from profile'
+      description: 'Remove education information from the authenticated user profile'
+      operationId: "deleteEducation"
+      produces:
+      - 'application/json'
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: 'educationId'
+        in: 'path'
+        description: 'ID of education to delete'
+        required: true
+        type: 'string'
+      responses:
+        '200':
+          description: 'Education deleted successfully'
+          schema:
+            $ref: '#/definitions/Profile'
+        '401':
+          description: 'Unauthorized'
+        '404':
+          description: 'Education not found'
+
+  /posts:
+    post:
+      tags:
+      - 'posts'
+      summary: 'Create new post'
+      description: 'Create a new post'
+      operationId: "createPost"
+      consumes:
+      - 'application/json'
+      produces:
+      - 'application/json'
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - in: 'body'
+        name: 'body'
+        description: 'Post data'
+        required: true
+        schema: 
+          $ref: '#/definitions/CreatePostDto'
+      responses:
+        '201':
+          description: 'Post created successfully'
+          schema:
+            $ref: '#/definitions/Post'
+        '400':
+          description: 'Invalid input'
+        '401':
+          description: 'Unauthorized'
+    get:
+      tags:
+      - 'posts'
+      summary: 'Get all posts'
+      description: 'Retrieve all posts'
+      operationId: "getAllPosts"
+      produces:
+      - 'application/json'
+      responses:
+        '200':
+          description: 'Posts retrieved successfully'
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Post'
+    put:
+      tags:
+      - 'posts'
+      summary: 'Update post'
+      description: 'Update an existing post'
+      operationId: "updatePost"
+      consumes:
+      - 'application/json'
+      produces:
+      - 'application/json'
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: 'id'
+        in: 'query'
+        description: 'ID of post to update'
+        required: true
+        type: 'string'
+      - in: 'body'
+        name: 'body'
+        description: 'Updated post data'
+        required: true
+        schema: 
+          $ref: '#/definitions/UpdatePostDto'
+      responses:
+        '200':
+          description: 'Post updated successfully'
+          schema:
+            $ref: '#/definitions/Post'
+        '400':
+          description: 'Invalid input'
+        '401':
+          description: 'Unauthorized'
+        '404':
+          description: 'Post not found'
+
+  /posts/{postId}:
+    get:
+      tags:
+      - 'posts'
+      summary: 'Get post by ID'
+      description: 'Retrieve a specific post by ID'
+      operationId: "getPostById"
+      produces:
+      - 'application/json'
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: 'postId'
+        in: 'path'
+        description: 'ID of post to retrieve'
+        required: true
+        type: 'string'
+      responses:
+        '200':
+          description: 'Post retrieved successfully'
+          schema:
+            $ref: '#/definitions/Post'
+        '401':
+          description: 'Unauthorized'
+        '404':
+          description: 'Post not found'
+    delete:
+      tags:
+      - 'posts'
+      summary: 'Delete post'
+      description: 'Delete a post'
+      operationId: "deletePost"
+      produces:
+      - 'application/json'
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: 'postId'
+        in: 'path'
+        description: 'ID of post to delete'
+        required: true
+        type: 'string'
+      responses:
+        '200':
+          description: 'Post deleted successfully'
+        '401':
+          description: 'Unauthorized'
+        '404':
+          description: 'Post not found'
+
+  /posts/paging/{page}:
+    get:
+      tags:
+      - 'posts'
+      summary: 'Get posts with pagination'
+      description: 'Retrieve posts with pagination'
+      operationId: "getPostsPaging"
+      produces:
+      - 'application/json'
+      parameters:
+      - name: 'page'
+        in: 'path'
+        description: 'Page number for pagination'
+        required: true
+        type: 'integer'
+        minimum: 1
+      responses:
+        '200':
+          description: 'Posts retrieved successfully'
+          schema:
+            $ref: '#/definitions/PaginatedPosts'
+
+  /posts/like/{postId}:
+    post:
+      tags:
+      - 'posts'
+      summary: 'Like a post'
+      description: 'Add a like to a post'
+      operationId: "likePost"
+      produces:
+      - 'application/json'
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: 'postId'
+        in: 'path'
+        description: 'ID of post to like'
+        required: true
+        type: 'string'
+      responses:
+        '200':
+          description: 'Post liked successfully'
+          schema:
+            $ref: '#/definitions/Post'
+        '401':
+          description: 'Unauthorized'
+        '404':
+          description: 'Post not found'
+
+  /posts/unlike/{postId}:
+    put:
+      tags:
+      - 'posts'
+      summary: 'Unlike a post'
+      description: 'Remove a like from a post'
+      operationId: "unlikePost"
+      produces:
+      - 'application/json'
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: 'postId'
+        in: 'path'
+        description: 'ID of post to unlike'
+        required: true
+        type: 'string'
+      responses:
+        '200':
+          description: 'Post unliked successfully'
+          schema:
+            $ref: '#/definitions/Post'
+        '401':
+          description: 'Unauthorized'
+        '404':
+          description: 'Post not found'
+
+  /posts/comments/{postId}:
+    post:
+      tags:
+      - 'posts'
+      summary: 'Add comment to post'
+      description: 'Add a comment to a post'
+      operationId: "addComment"
+      consumes:
+      - 'application/json'
+      produces:
+      - 'application/json'
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: 'postId'
+        in: 'path'
+        description: 'ID of post to comment on'
+        required: true
+        type: 'string'
+      - in: 'body'
+        name: 'body'
+        description: 'Comment data'
+        required: true
+        schema: 
+          $ref: '#/definitions/CommentDto'
+      responses:
+        '201':
+          description: 'Comment added successfully'
+          schema:
+            $ref: '#/definitions/Post'
+        '400':
+          description: 'Invalid input'
+        '401':
+          description: 'Unauthorized'
+        '404':
+          description: 'Post not found'
+
+  /posts/comments/{postId}/{commentId}:
+    delete:
+      tags:
+      - 'posts'
+      summary: 'Remove comment from post'
+      description: 'Remove a comment from a post'
+      operationId: "removeComment"
+      produces:
+      - 'application/json'
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: 'postId'
+        in: 'path'
+        description: 'ID of post'
+        required: true
+        type: 'string'
+      - name: 'commentId'
+        in: 'path'
+        description: 'ID of comment to remove'
+        required: true
+        type: 'string'
+      responses:
+        '200':
+          description: 'Comment removed successfully'
+          schema:
+            $ref: '#/definitions/Post'
+        '401':
+          description: 'Unauthorized'
+        '404':
+          description: 'Post or comment not found'
+
+  /posts/share/{postId}:
+    post:
+      tags:
+      - 'posts'
+      summary: 'Share a post'
+      description: 'Share a post'
+      operationId: "sharePost"
+      produces:
+      - 'application/json'
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: 'postId'
+        in: 'path'
+        description: 'ID of post to share'
+        required: true
+        type: 'string'
+      responses:
+        '200':
+          description: 'Post shared successfully'
+          schema:
+            $ref: '#/definitions/Post'
+        '401':
+          description: 'Unauthorized'
+        '404':
+          description: 'Post not found'
+    delete:
+      tags:
+      - 'posts'
+      summary: 'Unshare a post'
+      description: 'Remove share from a post'
+      operationId: "unsharePost"
+      produces:
+      - 'application/json'
+      security:
+      - ApiKeyAuth: []
+      parameters:
+      - name: 'postId'
+        in: 'path'
+        description: 'ID of post to unshare'
+        required: true
+        type: 'string'
+      responses:
+        '200':
+          description: 'Post unshared successfully'
+          schema:
+            $ref: '#/definitions/Post'
+        '401':
+          description: 'Unauthorized'
+        '404':
+          description: 'Post not found'
+definitions:
+  LoginDto:
+    type: 'object'
+    required:
+    - email
+    - password
+    properties:
+      email:
+        type: 'string'
+        format: 'email'
+        example: 'user@example.com'
+      password:
+        type: 'string'
+        minimum: 6
+        example: 'password123'
+
+  RegisterDto:
+    type: 'object'
+    required:
+    - first_name
+    - last_name
+    - email
+    - password
+    properties:
+      first_name:
+        type: 'string'
+        example: 'Thien'
+      last_name:
+        type: 'string'
+        example: 'Luan'
+      email:
+        type: 'string'
+        format: 'email'
+        example: 'thienluantm03@gmail.com'
+      password:
+        type: 'string'
+        minimum: 6
+        example: '654321'
+
+  UpdateUserDto:
+    type: 'object'
+    properties:
+      first_name:
+        type: 'string'
+      last_name:
+        type: 'string'
+      email:
+        type: 'string'
+        format: 'email'
+
+  CreateProfileDto:
+    type: 'object'
+    properties:
+      company:
+        type: 'string'
+        example: 'Gasy'
+      location:
+        type: 'string'
+        example: 'Thai Ha, Dong Da, Ha Noi'
+      website:
+        type: 'string'
+        format: 'uri'
+        example: 'https://gasy.one/'
+      bio:
+        type: 'string'
+        example: 'Front-end, Back-end, QA, UX/UI'
+      skills:
+        type: 'string'
+        example: 'ReactJS, NestJS, NodeJS, MongoDB'
+      status:
+        type: 'string'
+        enum: ['single', 'married', 'divorced', 'widowed']
+        example: 'single'
+      youtube:
+        type: 'string'
+        format: 'uri'
+        example: 'https://www.youtube.com/channel/UCkcBsoqZ5gyHdgQ0JiqVjeA'
+      twitter:
+        type: 'string'
+        format: 'uri'
+        example: 'https://x.com/Vukrat'
+      instagram:
+        type: 'string'
+        format: 'uri'
+        example: 'https://www.instagram.com/vukrat/'
+      linkedin:
+        type: 'string'
+        format: 'uri'
+        example: 'https://www.linkedin.com/in/vukr%A1%BB%85t-co%C3%i2n-27667b1b0/'
+      facebook:
+        type: 'string'
+        format: 'uri'
+        example: 'https://www.facebook.com/vukrat.coina.128151'
+
+  ExperienceDto:
+    type: 'object'
+    required:
+    - title
+    - company
+    - from
+    properties:
+      title:
+        type: 'string'
+        example: 'Backend Developer (NodeJS / NestJS / MongoDB)'
+      company:
+        type: 'string'
+        example: 'Gasy'
+      location:
+        type: 'string'
+        example: 'Thai Ha, Dong Da, Ha Noi'
+      from:
+        type: 'string'
+        format: 'date'
+        example: '2025-01-06'
+      to:
+        type: 'string'
+        format: 'date'
+        example: '2025-02-14'
+      current:
+        type: 'boolean'
+        example: false
+      description:
+        type: 'string'
+        example: 'Build and maintain backend with NodeJS (Express/NestJS).Design API and process data with MongoDB, optimize query performance.Apply Microservices architecture when needed.Use Docker, deploy to cloud, ensure stable CI/CD.'
+
+  EducationDto:
+    type: 'object'
+    required:
+    - school
+    - degree
+    - fieldofstudy
+    - from
+    properties:
+      school:
+        type: 'string'
+        example: 'HaNoi University of Resources and Environment'
+      degree:
+        type: 'string'
+        example: 'Bachelor'
+      fieldofstudy:
+        type: 'string'
+        example: 'Data Interface'
+      from:
+        type: 'string'
+        format: 'date'
+        example: '2023-02-01'
+      to:
+        type: 'string'
+        format: 'date'
+        example: '2025-12-01'
+      current:
+        type: 'boolean'
+        example: true
+      description:
+        type: 'string'
+        example: 'Learn about manage big data interface'
+
+  CreatePostDto:
+    type: 'object'
+    required:
+    - text
+    properties:
+      text:
+        type: 'string'
+        example: 'GASY – GASY Team Building 2024 Held in Nha Trang City'
+
+  UpdatePostDto:
+    type: 'object'
+    required:
+    - text
+    properties:
+      text:
+        type: 'string'
+        example: 'Agent Partnership Party 2019 "Light up the Night"'
+
+  CommentDto:
+    type: 'object'
+    required:
+    - text
+    properties:
+      text:
+        type: 'string'
+        example: 'Together, we are stronger'
+
+  Post:
+    type: 'object'
+    properties:
+      id:
+        type: 'string'
+        example: '685468d1d2bdca63f5d59225'
+      user:
+        $ref: '#/definitions/User'
+      text:
+        type: 'string'
+        example: 'GASY – GASY Team Building 2024 Held in Nha Trang City'
+      likes:
+        type: 'array'
+        items:
+          type: 'object'
+          properties:
+            user:
+              type: 'string'
+              example: '685013eb3c7f703e96917d04'
+      comments:
+        type: 'array'
+        items:
+          type: 'object'
+          properties:
+            id:
+              type: 'string'
+              example: '6856e13654b051ff008a76e9'
+            user:
+              $ref: '#/definitions/User'
+            text:
+              type: 'string'
+              example: 'Great post!'
+            date:
+              type: 'string'
+              format: 'date-time'
+      shares:
+        type: 'array'
+        items:
+          type: 'object'
+          properties:
+            user:
+              type: 'string'
+              example: '685013eb3c7f703e96917d04'
+      created_at:
+        type: 'string'
+        format: 'date-time'
+      updated_at:
+        type: 'string'
+        format: 'date-time'
+
+  PaginatedPosts:
+    type: 'object'
+    properties:
+      posts:
+        type: 'array'
+        items:
+          $ref: '#/definitions/Post'
+      total:
+        type: 'integer'
+        example: 50
+      page:
+        type: 'integer'
+        example: 1
+      totalPages:
+        type: 'integer'
+        example: 5
+      hasNext:
+        type: 'boolean'
+        example: true
+      hasPrev:
+        type: 'boolean'
+        example: false
+
+  Profile:
+    type: 'object'
+    properties:
+      id:
+        type: 'string'
+      user:
+        $ref: '#/definitions/User'
+      company:
+        type: 'string'
+      location:
+        type: 'string'
+      website:
+        type: 'string'
+        format: 'uri'
+      bio:
+        type: 'string'
+      skills:
+        type: 'string'
+      status:
+        type: 'string'
+      experience:
+        type: 'array'
+        items:
+          type: 'object'
+          properties:
+            id:
+              type: 'string'
+            title:
+              type: 'string'
+            company:
+              type: 'string'
+            location:
+              type: 'string'
+            from:
+              type: 'string'
+              format: 'date'
+            to:
+              type: 'string'
+              format: 'date'
+            current:
+              type: 'boolean'
+            description:
+              type: 'string'
+      education:
+        type: 'array'
+        items:
+          type: 'object'
+          properties:
+            id:
+              type: 'string'
+            school:
+              type: 'string'
+            degree:
+              type: 'string'
+            fieldofstudy:
+              type: 'string'
+            from:
+              type: 'string'
+              format: 'date'
+            to:
+              type: 'string'
+              format: 'date'
+            current:
+              type: 'boolean'
+            description:
+              type: 'string'
+      social:
+        type: 'object'
+        properties:
+          youtube:
+            type: 'string'
+            format: 'uri'
+          twitter:
+            type: 'string'
+            format: 'uri'
+          instagram:
+            type: 'string'
+            format: 'uri'
+          linkedin:
+            type: 'string'
+            format: 'uri'
+          facebook:
+            type: 'string'
+            format: 'uri'
+      created_at:
+        type: 'string'
+        format: 'date-time'
+      updated_at:
+        type: 'string'
+        format: 'date-time'
+
+  User:
+    type: 'object'
+    properties:
+      id:
+        type: 'string'
+        example: '685013eb3c7f703e96917d04'
+      first_name:
+        type: 'string'
+        example: 'Thien'
+      last_name:
+        type: 'string'
+        example: 'Luan'
+      email:
+        type: 'string'
+        format: 'email'
+        example: 'thienluantm03@gmail.com'
+      avatar:
+        type: 'string'
+        format: 'uri'
+      created_at:
+        type: 'string'
+        format: 'date-time'
+      updated_at:
+        type: 'string'
+        format: 'date-time'
+
+  AuthResponse:
+    type: 'object'
+    properties:
+      token:
+        type: 'string'
+        example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
+      user:
+        $ref: '#/definitions/User'
+
+  PaginatedUsers:
+    type: 'object'
+    properties:
+      users:
+        type: 'array'
+        items:
+          $ref: '#/definitions/User'
+      total:
+        type: 'integer'
+        example: 50
+      page:
+        type: 'integer'
+        example: 1
+      totalPages:
+        type: 'integer'
+        example: 5
+      hasNext:
+        type: 'boolean'
+        example: true
+      hasPrev:
+        type: 'boolean'
+        example: false
+
+  Error:
+    type: 'object'
+    properties:
+      message:
+        type: 'string'
+        example: 'Error message'
+      code:
+        type: 'integer'
+        example: 400
