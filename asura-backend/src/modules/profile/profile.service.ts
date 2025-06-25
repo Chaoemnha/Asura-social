@@ -10,7 +10,6 @@ import {
 import ProfileSchema from "./profile.model";
 import { HttpException } from "@core/exceptions";
 import CreateProfileDto from "./dtos/create_profile.dto";
-import { NextFunction } from "express";
 import { isWebUri } from "valid-url";
 import AddExperienceDto from "./dtos/add_experience.dto";
 import AddEducationDto from "./dtos/add_education.dto";

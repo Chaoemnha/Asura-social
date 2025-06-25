@@ -1,5 +1,4 @@
 import { Request, Response, NextFunction } from "express";
-import { TokenData } from "@modules/auth";
 import PostService from "./posts.service";
 import CreatePostDto from "./dtos/create_post.dto";
 import { IPost } from "./posts.interface";

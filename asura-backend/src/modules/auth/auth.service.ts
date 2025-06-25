@@ -5,11 +5,9 @@ import { HttpException } from "@core/exceptions";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 import LoginDto from "./auth.dto";
-import { token } from "morgan";
 import { generateJwtToken, randomTokenString } from "@core/utils/helpers";
 import { IRefreshToken, RefreshTokenSchema } from "@modules/refresh_token";
 import Logger from "@core/utils/logger";
-import { RefreshTokenDocument } from "@modules/refresh_token/refresh_token_model";
 import { HydratedDocument } from "mongoose";
 class AuthService {
   public userSchema = UserSchema;
