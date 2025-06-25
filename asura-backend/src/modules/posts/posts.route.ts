@@ -4,6 +4,7 @@ import { validatorMiddleware } from "@core/middleware";
 import authMiddleware from "@core/middleware/auth.middleware";
 import PostsController from "./posts.controller";
 import CreatePostDto from "./dtos/create_post.dto";
+import createCommentDto from "./dtos/create_comment_dto";
 
 export default class PostsRoute implements Route {
   public path = "/api/posts";
@@ -35,6 +36,27 @@ export default class PostsRoute implements Route {
       this.path + "/:id",
       authMiddleware,
       this.postsController.deletePost
+    );
+    this.router.put(
+      this.path + "/like/:id",
+      authMiddleware,
+      this.postsController.likePost
+    );
+    this.router.put(
+      this.path + "/unlike/:id",
+      authMiddleware,
+      this.postsController.unlikePost
+    );
+    this.router.post(
+      this.path + "/comments/:postid",
+      authMiddleware,
+      validatorMiddleware(createCommentDto, true),
+      this.postsController.addComment
+    );
+    this.router.delete(
+      this.path + "/comments/:postid/:commentid",
+      authMiddleware,
+      this.postsController.removeComment
     );
   }
 }
