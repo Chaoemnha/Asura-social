@@ -12,9 +12,15 @@ export interface IProfile {
   social: ISocial;
   followings: IFollower[];
   followers: IFollower[];
+  friends: IFriend[];
+  friend_request: IFriend[];
   date: Date;
 }
 
+export interface IFriend {
+  user: string;
+  date: Date;
+}
 export interface IExperience {
   _id: string;
   title: string;

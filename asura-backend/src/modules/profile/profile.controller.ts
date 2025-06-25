@@ -170,5 +170,73 @@ class ProfileController {
       next(error);
     }
   };
+  public addFriendReq = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const fromUserId = res.locals.user.id;
+      const toUserId = req.params.id;
+      const resultObj = await this.profileService.friendRequest(
+        fromUserId,
+        toUserId
+      );
+      res.status(200).json(resultObj);
+    } catch (error) {
+      next(error);
+    }
+  };
+  public cancelFriendReq = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const fromUserId = res.locals.user.id;
+      const toUserId = req.params.id;
+      const resultObj = await this.profileService.cancelFriendRequest(
+        fromUserId,
+        toUserId
+      );
+      res.status(200).json(resultObj);
+    } catch (error) {
+      next(error);
+    }
+  };
+  public acceptFriend = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const fromUserId = res.locals.user.id;
+      const toUserId = req.params.id;
+      const resultObj = await this.profileService.AddFriend(
+        fromUserId,
+        toUserId
+      );
+      res.status(200).json(resultObj);
+    } catch (error) {
+      next(error);
+    }
+  };
+  public removeFriend = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const fromUserId = res.locals.user.id;
+      const toUserId = req.params.id;
+      const resultObj = await this.profileService.UnFriend(
+        fromUserId,
+        toUserId
+      );
+      res.status(200).json(resultObj);
+    } catch (error) {
+      next(error);
+    }
+  };
 }
 export default ProfileController;
