@@ -124,6 +124,40 @@ export default class PostsController {
     }
   };
 
+  public makeShare = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const postId = req.params.id;
+      const shares = await this.postService.makeShare(
+        res.locals.user.id,
+        postId
+      );
+      res.status(200).json(shares);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public deleteShare = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const postId = req.params.id;
+      const shares = await this.postService.deleteShare(
+        res.locals.user.id,
+        postId
+      );
+      res.status(200).json(shares);
+    } catch (error) {
+      next(error);
+    }
+  };
+
   public addComment = async (
     req: Request,
     res: Response,
