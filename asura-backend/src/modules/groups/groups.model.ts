@@ -25,17 +25,25 @@ const GroupSchema = new mongoose.Schema({
       },
     },
   ],
-  member: [
+  members: [
     {
       user: {
         type: mongoose.Schema.Types.ObjectId,
       },
+      date: {
+        type: Date,
+        default: Date.now,
+      },
     },
   ],
-  member_request: [
+  member_requests: [
     {
       user: {
         type: mongoose.Schema.Types.ObjectId,
+      },
+      date: {
+        type: Date,
+        default: Date.now,
       },
     },
   ],
