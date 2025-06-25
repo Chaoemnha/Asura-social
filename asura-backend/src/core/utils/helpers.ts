@@ -31,7 +31,7 @@ export const generateJwtToken = (
   console.log("userId", userId);
   const dataInToken: DataStoredInToken = { id: userId };
   const secret: string = process.env.JWT_TOKEN_SECRET ?? "";
-  const expiresIn = 60;
+  const expiresIn = 3600;
   return {
     token: jwt.sign(dataInToken, secret, { expiresIn: expiresIn }),
     refreshToken: refreshToken,

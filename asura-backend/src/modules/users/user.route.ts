@@ -20,6 +20,7 @@ export default class UsersRoute implements Route {
     ); //POST: http://localhost:5000/api/users
     this.router.put(
       this.path + "/:id",
+      authMiddleware,
       validatorMiddleware(RegisterDto, true),
       this.usersController.updateUser
     ); //update=>dung put
