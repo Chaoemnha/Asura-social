@@ -4,10 +4,11 @@
   "description": "A mini social network for Asura community",
   "main": "src/server.ts",
   "scripts": {
-    "test": "asura_test",
     "server": "nodemon src/server.ts",
     "lint": "eslint . --ext .ts",
-    "lint-and-fix": "eslint . --ext .ts --fix"
+    "lint-and-fix": "eslint . --ext .ts --fix",
+    "build": "webpack",
+    "runn": "cross-env NODE_ENV=development nodemon dist/server.js"
   },
   "author": "Luan Nguyen",
   "license": "ISC",
@@ -52,7 +53,13 @@
     "eslint": "^9.29.0",
     "nodemon": "^3.1.9",
     "prettier": "^3.6.1",
+    "ts-loader": "^9.5.2",
     "ts-node": "^10.9.2",
-    "typecript": "^0.0.1-security"
+    "tsconfig-paths-webpack-plugin": "^4.2.0",
+    "typecript": "^0.0.1-security",
+    "webpack": "^5.99.9",
+    "webpack-cli": "^6.0.1",
+    "webpack-node-externals": "^3.0.0",
+    "webpack-shell-plugin-next": "^2.3.2"
   }
 }
