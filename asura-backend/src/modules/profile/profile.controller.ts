@@ -1,4 +1,3 @@
-import { IUser } from "@modules/users";
 import ProfileService from "./profile.service";
 import { Request, Response, NextFunction } from "express";
 import CreateProfileDto from "./dtos/create_profile.dto";

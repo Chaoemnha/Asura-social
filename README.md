@@ -21,8 +21,24 @@
 - git remote add origin https://github.com/Chaoemnha/Asura-social.git
 - git push -u origin master //-u là upstream, nghĩa là master này sẽ kết nối với master trên kia
 
+### ESLINT
+
+yarn add eslint @typescript-eslint/parser @typescript-eslint/eslint-plugin -D
+
+### Husky
+
+Có thể cài thêm husky để yêu cầu người dùng phải chạy lệnh, sửa lỗi thì mới được commit code
+
 ### Lession 10
 
 - tsc --init
   https://www.npmjs.com/package/winston
   https://www.npmjs.com/package/class-validator
+
+### Reference
+
+- http://expressjs.com/en/resources/middleware/morgan.html
+- https://www.typescriptlang.org/tsconfig
+- https://github.com/winstonjs/winston
+- https://www.npmjs.com/package/bcryptjs
+- https://www.npmjs.com/package/class-validator

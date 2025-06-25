@@ -1,5 +1,4 @@
 import { Request, Response, NextFunction } from "express";
-import { TokenData } from "@modules/auth";
 import GroupService from "./groups.service";
 import CreateGroupDto from "./dtos/create_group_dto";
 import SetManagerDto from "./dtos/set_manager_dto";

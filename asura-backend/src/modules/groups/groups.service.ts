@@ -117,10 +117,9 @@ export default class GroupService {
         "This user is already been member of this group"
       );
     //set lai group
-    group.member_requests = group.member_requests.filter(({ user }) => {
-      user.toString() !== userId;
-      console.log(user.toString(), userId);
-    });
+    group.member_requests = group.member_requests.filter(
+      ({ user }) => user.toString() !== userId
+    );
     group.members.unshift({ user: userId } as IMember);
     await group.save();
     return group;

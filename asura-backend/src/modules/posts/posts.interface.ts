@@ -1,5 +1,3 @@
-import mongoose from "mongoose";
-
 export interface IPost {
   _id: string;
   user: string;
