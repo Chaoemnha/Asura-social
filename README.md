@@ -29,6 +29,10 @@ yarn add eslint @typescript-eslint/parser @typescript-eslint/eslint-plugin -D
 
 Có thể cài thêm husky để yêu cầu người dùng phải chạy lệnh, sửa lỗi thì mới được commit code
 
+### Heroku
+
+Gặp bất cứ thắc mắc vấn đề gì, xem https://devcenter.heroku.com/articles/getting-started-with-nodejs
+
 ### Lession 10
 
 - tsc --init
