@@ -1,11 +1,11 @@
 {
   "scripts": {
-    "server": "nodemon src/server.ts",
-    "lint": "eslint . --ext .ts",
-    "lint-and-fix": "eslint . --ext .ts --fix",
-    "build": "webpack",
-    "runn": "cross-env NODE_ENV=development nodemon dist/server.js",
-    "start": "cd ./asura-backend && cross-env NODE_ENV=development node dist/server.js"
+    "server": "cd ./asura-backend && yarn server",
+    "lint": "cd ./asura-backend && yarn lint",
+    "lint-and-fix": "cd ./asura-backend && yarn lint-and-fix",
+    "build": "cd ./asura-backend && yarn build",
+    "runn": "cd ./asura-backend && yarn run",
+    "start": "cd ./asura-backend && yarn start"
   },
   "devDependencies": {}
 }
