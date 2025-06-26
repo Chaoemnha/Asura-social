@@ -8,6 +8,7 @@
     "start": "cd ./asura-backend && yarn start"
   },
   "devDependencies": {
+    "tsconfig-paths-webpack-plugin": "^4.2.0",
     "webpack": "^5.99.9",
     "webpack-cli": "^6.0.1",
     "webpack-node-externals": "^3.0.0"
