@@ -1,4 +1,10 @@
 {
+  "name": "asurasocial",
+  "private": true,
+  "workspaces": [
+    "asura-backend",
+    "asura-frontend"
+  ],
   "scripts": {
     "server": "cd ./asura-backend && yarn server",
     "lint": "cd ./asura-backend && yarn lint",
@@ -14,6 +20,7 @@
     "webpack-cli": "^6.0.1",
     "webpack-node-externals": "^3.0.0",
     "webpack-shell-plugin": "^0.5.0",
-    "webpack-shell-plugin-next": "^2.3.2"
+    "webpack-shell-plugin-next": "^2.3.2",
+    "typescript": "^5.8.3"
   }
 }
