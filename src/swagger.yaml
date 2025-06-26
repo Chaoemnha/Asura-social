@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
-  description: 'Asura Social API docs [Ongoing]'
-  version: '1.0.0'
+  description: 'Asura Social API docs'
+  version: '2.0.0'
   title: 'Asura Social Network API Manage'
   termsOfService: 'http://asura.com.vn'
   contact:
@@ -9,21 +9,22 @@ info:
   license:
     name: 'MIT'
     url: 'https://opensource.org/licenses/MIT'
-host: 'localhost:5000'
 basePath: '/api'
 tags:
 - name: 'auth'
   description: 'Authentication APIs'
+- name: 'refresh_token'
+  description: 'Get new token and revoke token'
 - name: 'users'
   description: 'User Management APIs'
 - name: 'profile'
   description: 'Profile Management APIs'
-- name: 'conversations'
-  description: 'Message APIs'
-- name: 'groups'
-  description: 'Group APIs'
 - name: 'posts'
   description: 'Post APIs'
+- name: 'groups'
+  description: 'Group APIs'
+- name: 'conversations'
+  description: 'Message APIs'
 schemes:
 - 'http'
 securityDefinitions:
@@ -32,21 +33,6 @@ securityDefinitions:
     in: header
     name: x-auth-token
 paths:
-  /:
-    get:
-      tags:
-      - 'auth'
-      summary: 'API Health Check'
-      description: 'Check if API is running'
-      operationId: "apiCheck"
-      produces:
-      - 'application/json'
-      responses:
-        '200':
-          description: 'API is running successfully'
-        '500':
-          description: 'Server error'
-
   /auth:
     post:
       tags:
@@ -237,7 +223,7 @@ paths:
           schema:
             $ref: '#/definitions/PaginatedUsers'
 
-  /v1/profile:
+  /profile:
     post:
       tags:
       - 'profile'
@@ -267,7 +253,7 @@ paths:
         '401':
           description: 'Unauthorized'
 
-  /v1/profile/me:
+  /profile/me:
     get:
       tags:
       - 'profile'
@@ -288,7 +274,7 @@ paths:
         '404':
           description: 'Profile not found'
 
-  /v1/profile:
+  /profile:
     get:
       tags:
       - 'profile'
@@ -305,7 +291,7 @@ paths:
             items:
               $ref: '#/definitions/Profile'
 
-  /v1/profile/user/{userId}:
+  /profile/user/{userId}:
     get:
       tags:
       - 'profile'
@@ -332,7 +318,7 @@ paths:
         '404':
           description: 'Profile not found'
 
-  /v1/profile/experience:
+  /profile/experience:
     put:
       tags:
       - 'profile'
@@ -362,7 +348,7 @@ paths:
         '401':
           description: 'Unauthorized'
 
-  /v1/profile/experience/{experienceId}:
+  /profile/experience/{experienceId}:
     delete:
       tags:
       - 'profile'
@@ -419,7 +405,7 @@ paths:
         '401':
           description: 'Unauthorized'
 
-  /v1/profile/education/{educationId}:
+  /profile/education/{educationId}:
     delete:
       tags:
       - 'profile'
@@ -772,6 +758,495 @@ paths:
           description: 'Unauthorized'
         '404':
           description: 'Post not found'
+  /profile/follow/{userId}:
+    put:
+      tags:
+        - profile
+      summary: Follow a user
+      description: Follow another user by their ID
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          type: string
+          description: ID of the user to follow
+        - name: x-auth-token
+          in: header
+          required: true
+          type: string
+          description: Authentication token
+      responses:
+        200:
+          description: Successfully followed user
+        401:
+          description: Unauthorized
+        404:
+          description: User not found
+    delete:
+      tags:
+        - profile
+      summary: Unfollow a user
+      description: Unfollow a user by their ID
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          type: string
+          description: ID of the user to unfollow
+        - name: x-auth-token
+          in: header
+          required: true
+          type: string
+          description: Authentication token
+      responses:
+        200:
+          description: Successfully unfollowed user
+        401:
+          description: Unauthorized
+        404:
+          description: User not found
+
+  /profile/request/{userId}:
+    put:
+      tags:
+        - profile
+      summary: Send friend request
+      description: Send a friend request to another user
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          type: string
+          description: ID of the user to send friend request to
+        - name: x-auth-token
+          in: header
+          required: true
+          type: string
+          description: Authentication token
+      responses:
+        200:
+          description: Friend request sent successfully
+        401:
+          description: Unauthorized
+        404:
+          description: User not found
+    delete:
+      tags:
+        - profile
+      summary: Cancel friend request
+      description: Cancel a pending friend request
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          type: string
+          description: ID of the user to cancel friend request
+        - name: x-auth-token
+          in: header
+          required: true
+          type: string
+          description: Authentication token
+      responses:
+        200:
+          description: Friend request cancelled successfully
+        401:
+          description: Unauthorized
+        404:
+          description: Friend request not found
+
+  /profile/friend/{userId}:
+    put:
+      tags:
+        - profile
+      summary: Accept friend request
+      description: Accept a friend request from another user
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          type: string
+          description: ID of the user whose friend request to accept
+        - name: x-auth-token
+          in: header
+          required: true
+          type: string
+          description: Authentication token
+      responses:
+        200:
+          description: Friend request accepted successfully
+        401:
+          description: Unauthorized
+        404:
+          description: Friend request not found
+    delete:
+      tags:
+        - profile
+      summary: Unfriend user
+      description: Remove a user from friends list
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          type: string
+          description: ID of the user to unfriend
+        - name: x-auth-token
+          in: header
+          required: true
+          type: string
+          description: Authentication token
+      responses:
+        200:
+          description: Successfully unfriended user
+        401:
+          description: Unauthorized
+        404:
+          description: Friend not found
+
+# Group APIs
+  /groups:
+    post:
+      tags:
+        - groups
+      summary: Create a new group
+      description: Create a new group with name, code and description
+      parameters:
+        - name: x-auth-token
+          in: header
+          required: true
+          type: string
+          description: Authentication token
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/CreateGroupRequest'
+      responses:
+        201:
+          description: Group created successfully
+          schema:
+            $ref: '#/definitions/Group'
+        400:
+          description: Invalid input
+        401:
+          description: Unauthorized
+    get:
+      tags:
+        - groups
+      summary: Get all groups
+      description: Retrieve all groups
+      parameters:
+        - name: x-auth-token
+          in: header
+          required: true
+          type: string
+          description: Authentication token
+      responses:
+        200:
+          description: Successfully retrieved groups
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Group'
+        401:
+          description: Unauthorized
+
+  /groups/{groupId}:
+    put:
+      tags:
+        - groups
+      summary: Update group
+      description: Update group information
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          type: string
+          description: ID of the group to update
+        - name: x-auth-token
+          in: header
+          required: true
+          type: string
+          description: Authentication token
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/UpdateGroupRequest'
+      responses:
+        200:
+          description: Group updated successfully
+          schema:
+            $ref: '#/definitions/Group'
+        400:
+          description: Invalid input
+        401:
+          description: Unauthorized
+        404:
+          description: Group not found
+    delete:
+      tags:
+        - groups
+      summary: Delete group
+      description: Delete a group
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          type: string
+          description: ID of the group to delete
+        - name: x-auth-token
+          in: header
+          required: true
+          type: string
+          description: Authentication token
+      responses:
+        200:
+          description: Group deleted successfully
+        401:
+          description: Unauthorized
+        404:
+          description: Group not found
+
+  /groups/join/{groupId}:
+    post:
+      tags:
+        - groups
+      summary: Request to join group
+      description: Send a request to join a group
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          type: string
+          description: ID of the group to join
+        - name: x-auth-token
+          in: header
+          required: true
+          type: string
+          description: Authentication token
+      responses:
+        200:
+          description: Join request sent successfully
+        401:
+          description: Unauthorized
+        404:
+          description: Group not found
+
+  /groups/join/{groupId}/{userId}:
+    put:
+      tags:
+        - groups
+      summary: Accept join request
+      description: Accept a user's request to join the group
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          type: string
+          description: ID of the group
+        - name: userId
+          in: path
+          required: true
+          type: string
+          description: ID of the user to accept
+        - name: x-auth-token
+          in: header
+          required: true
+          type: string
+          description: Authentication token
+      responses:
+        200:
+          description: Join request accepted successfully
+        401:
+          description: Unauthorized
+        404:
+          description: Group or user not found
+
+  /groups/manager/{groupId}:
+    put:
+      tags:
+        - groups
+      summary: Add manager to group
+      description: Add a manager/admin to the group
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          type: string
+          description: ID of the group
+        - name: x-auth-token
+          in: header
+          required: true
+          type: string
+          description: Authentication token
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/AddManagerRequest'
+      responses:
+        200:
+          description: Manager added successfully
+        401:
+          description: Unauthorized
+        404:
+          description: Group not found
+
+  /groups/manager/{groupId}/{userId}:
+    delete:
+      tags:
+        - groups
+      summary: Remove manager from group
+      description: Remove a manager/admin from the group
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          type: string
+          description: ID of the group
+        - name: userId
+          in: path
+          required: true
+          type: string
+          description: ID of the manager to remove
+        - name: x-auth-token
+          in: header
+          required: true
+          type: string
+          description: Authentication token
+      responses:
+        200:
+          description: Manager removed successfully
+        401:
+          description: Unauthorized
+        404:
+          description: Group or manager not found
+
+  /groups/members/{groupId}:
+    get:
+      tags:
+        - groups
+      summary: Get group members
+      description: Get all members of a group
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          type: string
+          description: ID of the group
+        - name: x-auth-token
+          in: header
+          required: true
+          type: string
+          description: Authentication token
+      responses:
+        200:
+          description: Successfully retrieved group members
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/GroupMember'
+        401:
+          description: Unauthorized
+        404:
+          description: Group not found
+
+  /groups/member/{groupId}:
+    delete:
+      tags:
+        - groups
+      summary: Leave group
+      description: Leave a group or remove a member
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          type: string
+          description: ID of the group
+        - name: x-auth-token
+          in: header
+          required: true
+          type: string
+          description: Authentication token
+      responses:
+        200:
+          description: Successfully left group
+        401:
+          description: Unauthorized
+        404:
+          description: Group not found
+
+# Conversation APIs
+  /conversation:
+    post:
+      tags:
+        - conversations
+      summary: Send message
+      description: Send a message in a conversation
+      parameters:
+        - name: x-auth-token
+          in: header
+          required: true
+          type: string
+          description: Authentication token
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/SendMessageRequest'
+      responses:
+        201:
+          description: Message sent successfully
+          schema:
+            $ref: '#/definitions/Message'
+        400:
+          description: Invalid input
+        401:
+          description: Unauthorized
+    get:
+      tags:
+        - conversations
+      summary: Get my conversations
+      description: Retrieve all conversations for the current user
+      parameters:
+        - name: x-auth-token
+          in: header
+          required: true
+          type: string
+          description: Authentication token
+      responses:
+        200:
+          description: Successfully retrieved conversations
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Conversation'
+        401:
+          description: Unauthorized
+
+# Refresh Token API
+  /auth/refresh-token:
+    post:
+      tags:
+        - refresh_token
+      summary: Refresh access token
+      description: Get a new access token using refresh token
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/RefreshTokenRequest'
+      responses:
+        200:
+          description: Token refreshed successfully
+          schema:
+            $ref: '#/definitions/RefreshTokenResponse'
+        400:
+          description: Invalid refresh token
+        401:
+          description: Refresh token expired
+
 definitions:
   LoginDto:
     type: 'object'
@@ -1187,3 +1662,229 @@ definitions:
       code:
         type: 'integer'
         example: 400
+
+  CreateGroupRequest:
+    type: object
+    required:
+      - name
+      - code
+      - description
+    properties:
+      name:
+        type: string
+        description: Name of the group
+        example: "Event"
+      code:
+        type: string
+        description: Unique code for the group
+        example: "ccc"
+      description:
+        type: string
+        description: Description of the group
+        example: "A group about celebrate parties, award events and other interesting events"
+
+  UpdateGroupRequest:
+    type: object
+    properties:
+      name:
+        type: string
+        description: Name of the group
+        example: "Team"
+      code:
+        type: string
+        description: Unique code for the group
+        example: "abc"
+      description:
+        type: string
+        description: Description of the group
+        example: "A group about team building activities"
+
+  Group:
+    type: object
+    properties:
+      _id:
+        type: string
+        description: Group ID
+        example: "685a6d7868df09fc8025f665"
+      name:
+        type: string
+        description: Name of the group
+        example: "Event"
+      code:
+        type: string
+        description: Unique code for the group
+        example: "ccc"
+      description:
+        type: string
+        description: Description of the group
+        example: "A group about celebrate parties, award events and other interesting events"
+      creator:
+        type: string
+        description: ID of the group creator
+        example: "680cec98301c304286e796f0"
+      members:
+        type: array
+        items:
+          $ref: '#/definitions/GroupMember'
+      managers:
+        type: array
+        items:
+          $ref: '#/definitions/GroupManager'
+      createdAt:
+        type: string
+        format: date-time
+        description: Creation timestamp
+      updatedAt:
+        type: string
+        format: date-time
+        description: Last update timestamp
+
+  GroupMember:
+    type: object
+    properties:
+      userId:
+        type: string
+        description: User ID
+        example: "680cd185301c304286e796ec"
+      joinedAt:
+        type: string
+        format: date-time
+        description: Date when user joined the group
+      status:
+        type: string
+        enum: [active, pending, banned]
+        description: Member status in the group
+
+  GroupManager:
+    type: object
+    properties:
+      userId:
+        type: string
+        description: Manager user ID
+        example: "680cd185301c304286e796ec"
+      role:
+        type: string
+        enum: [admin, moderator]
+        description: Manager role in the group
+        example: "admin"
+      assignedAt:
+        type: string
+        format: date-time
+        description: Date when user was assigned as manager
+
+  AddManagerRequest:
+    type: object
+    required:
+      - userId
+      - role
+    properties:
+      userId:
+        type: string
+        description: ID of the user to make manager
+        example: "680cd185301c304286e796ec"
+      role:
+        type: string
+        enum: [admin, moderator]
+        description: Role to assign
+        example: "admin"
+
+  SendMessageRequest:
+    type: object
+    required:
+      - to
+      - text
+    properties:
+      conversationId:
+        type: string
+        description: ID of existing conversation (optional for new conversations)
+        example: "685af281ede4f84fc3d5349b"
+      to:
+        type: string
+        description: ID of the recipient user
+        example: "6851bb959876243a0c307879"
+      text:
+        type: string
+        description: Message content
+        example: "Hello, how are you?"
+
+  Message:
+    type: object
+    properties:
+      _id:
+        type: string
+        description: Message ID
+        example: "685af910c4e2fb6a4f944ae5"
+      conversationId:
+        type: string
+        description: ID of the conversation
+        example: "685af281ede4f84fc3d5349b"
+      from:
+        type: string
+        description: ID of the sender
+        example: "6851bb959876243a0c307879"
+      to:
+        type: string
+        description: ID of the recipient
+        example: "680cec98301c304286e796f0"
+      text:
+        type: string
+        description: Message content
+        example: "Hello, how are you?"
+      createdAt:
+        type: string
+        format: date-time
+        description: Message timestamp
+      readAt:
+        type: string
+        format: date-time
+        description: When message was read (optional)
+
+  Conversation:
+    type: object
+    properties:
+      _id:
+        type: string
+        description: Conversation ID
+        example: "685af281ede4f84fc3d5349b"
+      participants:
+        type: array
+        items:
+          type: string
+        description: IDs of conversation participants
+        example: ["6851bb959876243a0c307879", "680cec98301c304286e796f0"]
+      lastMessage:
+        $ref: '#/definitions/Message'
+      createdAt:
+        type: string
+        format: date-time
+        description: Conversation creation timestamp
+      updatedAt:
+        type: string
+        format: date-time
+        description: Last activity timestamp
+
+  RefreshTokenRequest:
+    type: object
+    required:
+      - refreshToken
+    properties:
+      refreshToken:
+        type: string
+        description: Refresh token to exchange for new access token
+        example: "1ba2b8ca4e6dfb9add1b22a6d0d75641827ca51c0205c31b56d4ea67a54a25336e918a4b4973fa59"
+
+  RefreshTokenResponse:
+    type: object
+    properties:
+      accessToken:
+        type: string
+        description: New access token
+        example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+      refreshToken:
+        type: string
+        description: New refresh token (optional)
+        example: "2ca3c9db5f7efb0bee2c33b7e1e86752938cb62d1316d42c67e5fb78b65b36447f029b5c5a84gb6a"
+      expiresIn:
+        type: integer
+        description: Token expiration time in seconds
+        example: 3600
