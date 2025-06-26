@@ -91,11 +91,6 @@ export class App {
   private initialSwagger() {
     //No dang hieu la thu muc ngoai cung
     const swaggerDocument = YAML.load("./src/swagger.yaml");
-    this.app.use(
-      "/swagger",
-      express.static("node_modules/swagger-ui-dist/", { index: false }),
-      swaggerUi.serve,
-      swaggerUi.setup(swaggerDocument)
-    );
+    this.app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
   }
 }
