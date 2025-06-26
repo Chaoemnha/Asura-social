@@ -7,5 +7,8 @@
     "runn": "cd ./asura-backend && yarn runn",
     "start": "cd ./asura-backend && yarn start"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "webpack": "^5.99.9",
+    "webpack-cli": "^6.0.1"
+  }
 }
