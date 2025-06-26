@@ -8,7 +8,8 @@
   "scripts": {
     "lint": "cd ./asura-backend && yarn lint",
     "lint-and-fix": "cd ./asura-backend && yarn lint-and-fix",
-    "build": "cd ./asura-backend && yarn build"
+    "build": "cd ./asura-backend && yarn build",
+    "start": "cd ./asura_backend && yarn start"
   },
   "dependencies": {
     "@types/bcryptjs": "^3.0.0",

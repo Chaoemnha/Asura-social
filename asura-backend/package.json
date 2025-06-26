@@ -4,12 +4,10 @@
   "description": "A mini social network for Asura community",
   "main": "src/server.ts",
   "scripts": {
-    "server": "nodemon src/server.ts",
     "lint": "eslint . --ext .ts",
     "lint-and-fix": "eslint . --ext .ts --fix",
     "build": "webpack",
-    "runn": "cross-env NODE_ENV=development nodemon dist/server.js",
-    "start": "cross-env NODE_ENV=development node dist/server.js"
+    "start": "node dist/server.js"
   },
   "author": "Luan Nguyen",
   "license": "ISC",
