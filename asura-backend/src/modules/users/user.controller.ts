@@ -1,0 +1,92 @@
+import { Request, Response, NextFunction } from "express";
+import UserService from "./user.service";
+import RegisterDto from "./dtos/register.dtos";
+import { TokenData } from "@modules/auth";
+export default class UsersController {
+  private userService = new UserService();
+  public register = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const model: RegisterDto = req.body;
+      const tokenData: TokenData = await this.userService.createUser(model); //Ở đây tokenData sẽ có kiểu TokenData nhưng ta ép kiểu thế kia nhìn nó tường minh hơn thôi
+      res.status(200).json(tokenData);
+    } catch (error) {
+      next(error);
+    }
+  };
+  public getUserById = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const userId: string = req.params.id;
+      const user = await this.userService.getUserById(userId); //Ở đây tokenData sẽ có kiểu TokenData nhưng ta ép kiểu thế kia nhìn nó tường minh hơn thôi
+      res.status(200).json(user);
+    } catch (error) {
+      next(error);
+    }
+  };
+  public updateUser = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const model: RegisterDto = req.body;
+      const user = await this.userService.updateUser(req.params.id, model); //Ở đây tokenData sẽ có kiểu TokenData nhưng ta ép kiểu thế kia nhìn nó tường minh hơn thôi
+      res.status(200).json(user);
+    } catch (error) {
+      next(error);
+    }
+  };
+  public getAll = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const users = await this.userService.getAll();
+      res.status(200).json(users);
+    } catch (error) {
+      next(error);
+    }
+  };
+  public getAllPaging = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const page: number = Number(req.params.page);
+      const keyword = req.query.keyword || "";
+      const paginationResult = await this.userService.getAllPaging(
+        keyword.toString(),
+        page
+      );
+      res.status(200).json(paginationResult);
+    } catch (error) {
+      next(error);
+    }
+  };
+  public deleteUser = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const result = await this.userService.deleteUser(req.params.id);
+      res.status(200).json(result);
+    } catch (error) {
+      next(error);
+    }
+  };
+  public deleteUsers = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const ids: string[] = req.body;
+      const result = await this.userService.deleteUsers(ids);
+      res.status(200).json(result);
+    } catch (error) {
+      next(error);
+    }
+  };
+}

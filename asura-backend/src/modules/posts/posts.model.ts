@@ -1,0 +1,60 @@
+import mongoose from "mongoose";
+import { IPost } from "./posts.interface";
+
+const PostSchema = new mongoose.Schema({
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "user",
+  },
+  text: {
+    type: String,
+    required: true,
+  },
+  name: {
+    type: String,
+  },
+  avatar: {
+    type: String,
+  },
+  likes: [
+    {
+      user: String,
+    },
+  ],
+  comments: [
+    {
+      _id: {
+        type: String,
+      },
+      user: {
+        type: String,
+      },
+      text: {
+        type: String,
+      },
+      name: {
+        type: String,
+      },
+      avatar: {
+        type: String,
+      },
+      date: {
+        type: Date,
+        default: Date.now,
+      },
+    },
+  ],
+  shares: [
+    {
+      user: {
+        type: String,
+      },
+    },
+  ],
+  date: {
+    type: Date,
+    default: Date.now,
+  },
+});
+
+export default mongoose.model<IPost & Document>("post", PostSchema);
