@@ -27,6 +27,7 @@ tags:
   description: 'Message APIs'
 schemes:
 - 'http'
+- 'https'
 securityDefinitions:
   ApiKeyAuth:
     type: apiKey

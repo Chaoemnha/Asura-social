@@ -74,6 +74,18 @@ export class App {
     }
     this.app.use(express.json()); //Cai them may cai nay de nhan req body
     this.app.use(express.urlencoded({ extended: true }));
+    this.app.use((req, res, next) => {
+      res.setHeader(
+        "Content-Security-Policy",
+        "default-src 'self'; connect-src 'self' https://*.herokuapp.com http://localhost:*;"
+      );
+      next();
+      this.app.use(
+        cors({
+          origin: "*", // Hoặc domain cụ thể
+        })
+      );
+    });
   }
 
   private initialSwagger() {
