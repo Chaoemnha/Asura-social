@@ -1,17 +1,29 @@
 {
   "name": "asurasocial",
-  "version": "1.0.0",
   "private": true,
   "workspaces": [
     "asura-backend",
     "asura-frontend"
   ],
   "scripts": {
-    "build": "yarn workspace asura-backend build",
-    "start": "yarn workspace asura-backend start",
-    "server": "yarn workspace asura-backend server",
-    "lint": "yarn workspace asura-backend lint",
-    "lint-and-fix": "yarn workspace asura-backend lint-and-fix",
-    "runn": "yarn workspace asura-backend runn"
+    "server": "cd ./asura-backend && yarn server",
+    "lint": "cd ./asura-backend && yarn lint",
+    "lint-and-fix": "cd ./asura-backend && yarn lint-and-fix",
+    "build": "cd ./asura-backend && yarn build",
+    "runn": "cd ./asura-backend && yarn runn",
+    "start": "cd ./asura-backend && yarn start"
+  },
+  "devDependencies": {
+    "ts-loader": "^9.5.2",
+    "tsconfig-paths-webpack-plugin": "^4.2.0",
+    "webpack": "^5.99.9",
+    "webpack-cli": "^6.0.1",
+    "webpack-node-externals": "^3.0.0",
+    "webpack-shell-plugin": "^0.5.0",
+    "webpack-shell-plugin-next": "^2.3.2",
+    "typescript": "^5.8.3",
+    "cross-env": "^7.0.3",
+    "nodemon": "^3.1.9",
+    "ts-node": "^10.9.2"
   }
 }
