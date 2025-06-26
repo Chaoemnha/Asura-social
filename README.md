@@ -32,6 +32,11 @@ Có thể cài thêm husky để yêu cầu người dùng phải chạy lệnh,
 ### Heroku
 
 Gặp bất cứ thắc mắc vấn đề gì, xem https://devcenter.heroku.com/articles/getting-started-with-nodejs
+Tôi đã bỏ webpack vì gặp vấn đề deploy với heroku, nó vẫn chạy được bình thường ở local nếu bạn muốn bạn vẫn có thể thêm chúng vào và thực thi, đây là các lệnh tôi tạm thời loại bỏ trong package.json>scripts backend:
+,
+"build": "webpack",
+"runn": "cross-env NODE_ENV=development nodemon dist/server.js",
+"start": "cross-env NODE_ENV=development node dist/server.js"
 
 ### Lession 10
 

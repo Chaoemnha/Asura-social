@@ -6,12 +6,9 @@
     "asura-frontend"
   ],
   "scripts": {
-    "server": "cd ./asura-backend && yarn server",
     "lint": "cd ./asura-backend && yarn lint",
     "lint-and-fix": "cd ./asura-backend && yarn lint-and-fix",
-    "build": "cd ./asura-backend && yarn build",
-    "runn": "cd ./asura-backend && yarn runn",
-    "start": "cd ./asura-backend && yarn start"
+    "build": "cd ./asura-backend && yarn build"
   },
   "dependencies": {
     "@types/bcryptjs": "^3.0.0",
