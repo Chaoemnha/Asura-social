@@ -9,7 +9,7 @@
     "lint": "cd ./asura-backend && yarn lint",
     "lint-and-fix": "cd ./asura-backend && yarn lint-and-fix",
     "build": "cd ./asura-backend && yarn build",
-    "start": "(Get-ChildItem -Directory).Name && yarn server"
+    "start": "pwd && ls && yarn server"
   },
   "dependencies": {
     "@types/bcryptjs": "^3.0.0",
